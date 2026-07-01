@@ -67,7 +67,6 @@
 .new_arrival .swiper_prev { left: -20px; }
 .new_arrival .swiper_next { right: -20px; }
 .new_arrival .swiper_nav img { width: 14px; }
-.new_arrival .swiper_prev img { transform: rotate(180deg); }
 
 .section_more_wrap { text-align: center; margin-top: 60px; }
 
