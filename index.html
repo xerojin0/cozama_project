@@ -1,423 +1,448 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COZAMA | Where Comfort Meets the World</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/main.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COZAMA | Where Comfort Meets the World</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <!-- ================= HEADER ================= -->
+    <header class="header">
+      <div class="inner">
+        <div class="header_left">
+          <button type="button" class="icon_btn gnb_open_btn" aria-label="메뉴 열기">
+            <img src="img/icon/menu_icon.svg" alt="" />
+          </button>
+        </div>
+        <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA" /></a>
+        <div class="header_right">
+          <button type="button" class="icon_btn" aria-label="검색">
+            <img src="img/icon/search_icon.svg" alt="" />
+          </button>
+          <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt="" /></a>
+        </div>
+      </div>
+    </header>
 
-<!-- ================= HEADER ================= -->
-<header class="header">
-  <div class="inner">
-    <div class="header_left">
-      <button type="button" class="icon_btn gnb_open_btn" aria-label="메뉴 열기"><img src="img/icon/menu_icon.svg" alt=""></button>
-    </div>
-    <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
-    <div class="header_right">
-      <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
-    </div>
-  </div>
-</header>
+    <!-- ================= GNB SLIDE MENU ================= -->
+    <div class="gnb_overlay">
+      <div class="inner">
+        <div class="gnb_topbar">
+          <button type="button" class="icon_btn gnb_close_btn" aria-label="메뉴 닫기">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M1 1L17 17M17 1L1 17" stroke="#1F2D3D" stroke-width="1.6" />
+            </svg>
+          </button>
+          <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA" /></a>
+          <div class="gnb_util">
+            <button type="button" class="icon_btn" aria-label="검색">
+              <img src="img/icon/search_icon.svg" alt="" />
+            </button>
+            <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt="" /></a>
+          </div>
+        </div>
+        <div class="gnb_auth" data-auth="out">
+          <a href="login.html" class="btn btn_login guest_only">LOGIN</a>
+          <a href="join.html" class="btn btn_join guest_only">JOIN</a>
+          <a href="mypage.html" class="mylounge_link member_only">MY LOUNGE</a>
+          <a href="#" class="logout_btn member_only">LOGOUT</a>
+        </div>
 
-<!-- ================= GNB SLIDE MENU ================= -->
-<div class="gnb_overlay">
-  <div class="gnb_topbar">
-    <button type="button" class="icon_btn gnb_close_btn" aria-label="메뉴 닫기">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 1L17 17M17 1L1 17" stroke="#1F2D3D" stroke-width="1.6"/></svg>
-    </button>
-    <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
-    <div class="gnb_util">
-      <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
-    </div>
-  </div>
-
-  <div class="gnb_auth" data-auth="out">
-    <a href="login.html" class="btn btn_login guest_only">LOGIN</a>
-    <a href="join.html" class="btn btn_join guest_only">JOIN</a>
-    <a href="mypage.html" class="mylounge_link member_only">MY LOUNGE</a>
-    <a href="#" class="logout_btn member_only">LOGOUT</a>
-  </div>
-
-  <nav class="gnb_menu">
-    <div class="gnb_1depth">
-      <a href="about.html" class="gnb_1depth_link">ABOUT US</a>
-    </div>
-    <div class="gnb_1depth">
-      <a href="product-list.html?cate=all" class="gnb_1depth_link">
-        SHOP
-        <span class="gnb_toggle_icon"><img class="icon_plus" src="img/icon/plus_icon.svg" alt=""><img class="icon_minus" src="img/icon/minus_icon.svg" alt=""></span>
-      </a>
-      <div class="gnb_2depth">
-        <a href="product-list.html?cate=all" class="gnb_2depth_link">ALL</a>
-        <a href="product-list.html?cate=women" class="gnb_2depth_link">WOMEN</a>
-        <a href="product-list.html?cate=men" class="gnb_2depth_link">MEN</a>
-        <a href="product-list.html?cate=new" class="gnb_2depth_link">NEW ITEMS</a>
-        <a href="product-list.html?cate=best" class="gnb_2depth_link">BEST SELLERS</a>
+        <nav class="gnb_menu">
+          <div class="gnb_1depth">
+            <a href="about.html" class="gnb_1depth_link">ABOUT US</a>
+          </div>
+          <div class="gnb_1depth">
+            <a href="product-list.html?cate=all" class="gnb_1depth_link">
+              SHOP
+              <span class="gnb_toggle_icon"
+                ><img class="icon_plus" src="img/icon/plus_icon.svg" alt="" /><img
+                  class="icon_minus"
+                  src="img/icon/minus_icon.svg"
+                  alt=""
+              /></span>
+            </a>
+            <div class="gnb_2depth">
+              <a href="product-list.html?cate=all" class="gnb_2depth_link">ALL</a>
+              <a href="product-list.html?cate=women" class="gnb_2depth_link">WOMEN</a>
+              <a href="product-list.html?cate=men" class="gnb_2depth_link">MEN</a>
+              <a href="product-list.html?cate=new" class="gnb_2depth_link">NEW ITEMS</a>
+              <a href="product-list.html?cate=best" class="gnb_2depth_link">BEST SELLERS</a>
+            </div>
+          </div>
+          <div class="gnb_1depth">
+            <a href="product-list.html?cate=sale" class="gnb_1depth_link">SALE</a>
+          </div>
+          <div class="gnb_1depth">
+            <a href="lookbook.html" class="gnb_1depth_link">LOOKBOOK</a>
+          </div>
+          <div class="gnb_1depth">
+            <a href="notice.html" class="gnb_1depth_link">
+              BOARD
+              <span class="gnb_toggle_icon"
+                ><img class="icon_plus" src="img/icon/plus_icon.svg" alt="" /><img
+                  class="icon_minus"
+                  src="img/icon/minus_icon.svg"
+                  alt=""
+              /></span>
+            </a>
+            <div class="gnb_2depth">
+              <a href="notice.html" class="gnb_2depth_link">NOTICE</a>
+              <a href="review.html" class="gnb_2depth_link">REVIEW</a>
+            </div>
+          </div>
+        </nav>
       </div>
     </div>
-    <div class="gnb_1depth">
-      <a href="product-list.html?cate=sale" class="gnb_1depth_link">SALE</a>
-    </div>
-    <div class="gnb_1depth">
-      <a href="lookbook.html" class="gnb_1depth_link">LOOKBOOK</a>
-    </div>
-    <div class="gnb_1depth">
-      <a href="notice.html" class="gnb_1depth_link">
-        BOARD
-        <span class="gnb_toggle_icon"><img class="icon_plus" src="img/icon/plus_icon.svg" alt=""><img class="icon_minus" src="img/icon/minus_icon.svg" alt=""></span>
-      </a>
-      <div class="gnb_2depth">
-        <a href="notice.html" class="gnb_2depth_link">NOTICE</a>
-        <a href="review.html" class="gnb_2depth_link">REVIEW</a>
-      </div>
-    </div>
-  </nav>
-</div>
 
-<main>
-
-  <!-- ================= 1. Main Visual Hero ================= -->
-  <section class="main_visual">
-    <article class="swiper_container swiper-hero">
-      <div class="swiper-wrapper">
-
-        <div class="swiper-slide">
-          <div class="slide_bg" style="background-image:url('img/main/main_visual_001.jpg')"></div>
-          <div class="slide_content">
-            <span class="badge">NEW</span>
-            <h2 class="prod_title">코자마 시그니처 테라코타 세트</h2>
-            <p class="prod_desc">침대 위 포근함 그대로, 문밖을 나서는 단정함을 입다.</p>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="slide_bg" style="background-image:url('img/main/main_visual_002.jpg')"></div>
-          <div class="slide_content">
-            <span class="badge">NEW</span>
-            <h2 class="prod_title">코튼 셔츠 카라 홈웨어</h2>
-            <p class="prod_desc">출근룩처럼 단정하게, 잠옷처럼 편안하게.</p>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="slide_bg" style="background-image:url('img/main/main_visual_003.jpg')"></div>
-          <div class="slide_content">
-            <span class="badge">NEW</span>
-            <h2 class="prod_title">모달 저지 라운지 세트</h2>
-            <p class="prod_desc">부드러운 촉감, 하루 종일 이어지는 편안함.</p>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="slide_bg" style="background-image:url('img/main/main_visual_004.jpg')"></div>
-          <div class="slide_content">
-            <span class="badge">NEW</span>
-            <h2 class="prod_title">미니멀 스트라이프 파자마</h2>
-            <p class="prod_desc">군더더기 없는 디자인, 어디서든 자연스럽게.</p>
-          </div>
-        </div>
-
-        <div class="swiper-slide">
-          <div class="slide_bg" style="background-image:url('img/main/main_visual_005.jpg')"></div>
-          <div class="slide_content">
-            <span class="badge">NEW</span>
-            <h2 class="prod_title">올데이 카디건 홈웨어</h2>
-            <p class="prod_desc">집 앞 산책부터 재택근무까지, 하나의 옷으로.</p>
-          </div>
-        </div>
-
-      </div>
-      <div class="swiper_nav swiper_prev"><img src="img/icon/Polygon 2 (Stroke).svg" alt="이전"></div>
-      <div class="swiper_nav swiper_next"><img src="img/icon/Polygon 2 (Stroke)-1.svg" alt="다음"></div>
-      <div class="swiper-pagination hero_pagination"></div>
-    </article>
-  </section>
-
-  <!-- ================= 2. New Arrivals ================= -->
-  <section class="new_arrival">
-    <div class="inner">
-      <h2 class="section_title" style="font-size:44px;">NEW ARRIVALS</h2>
-      <p class="section_desc">코자마의 새로운 시즌 라인업을 가장 먼저 만나보세요.</p>
-
-      <article class="prod_grid">
-        <div class="swiper swiper-new-arrival">
+    <main>
+      <!-- ================= 1. Main Visual Hero ================= -->
+      <section class="main_visual">
+        <article class="swiper_container swiper-hero">
           <div class="swiper-wrapper">
-
             <div class="swiper-slide">
-              <a href="product-detail.html?id=na001" class="prod_card">
-                <div class="thumb_wrap">
-                  <span class="badge prod_badge">NEW</span>
-                  <img src="img/main/newArrivals_item001.jpg" alt="코자마 시그니처 카라 잠옷세트">
-                  <img class="thumb_hover" src="img/main/newArrivals_item001_hover.jpg" alt="">
-                </div>
-                <div class="prod_info">
-                  <p class="prod_name">코자마 시그니처 카라 잠옷세트 (60수)</p>
-                  <p class="prod_price">89,000원</p>
-                </div>
-              </a>
+              <div class="slide_bg" style="background-image: url(&quot;img/main/main_visual_001.jpg&quot;)"></div>
+              <div class="slide_content">
+                <span class="badge">NEW</span>
+                <h2 class="prod_title">코자마 시그니처 테라코타 세트</h2>
+                <p class="prod_desc">침대 위 포근함 그대로, 문밖을 나서는 단정함을 입다.</p>
+              </div>
             </div>
 
             <div class="swiper-slide">
-              <a href="product-detail.html?id=na002" class="prod_card">
-                <div class="thumb_wrap">
-                  <span class="badge prod_badge">NEW</span>
-                  <img src="img/main/newArrivals_item002.jpg" alt="데일리 라운지 팬츠">
-                  <img class="thumb_hover" src="img/main/newArrivals_item002_hover.jpg" alt="">
-                </div>
-                <div class="prod_info">
-                  <p class="prod_name">데일리 라운지 팬츠</p>
-                  <p class="prod_price">45,000원</p>
-                </div>
-              </a>
+              <div class="slide_bg" style="background-image: url(&quot;img/main/main_visual_002.jpg&quot;)"></div>
+              <div class="slide_content">
+                <span class="badge">NEW</span>
+                <h2 class="prod_title">코튼 셔츠 카라 홈웨어</h2>
+                <p class="prod_desc">출근룩처럼 단정하게, 잠옷처럼 편안하게.</p>
+              </div>
             </div>
 
             <div class="swiper-slide">
-              <a href="product-detail.html?id=na003" class="prod_card">
-                <div class="thumb_wrap">
-                  <span class="badge prod_badge">NEW</span>
-                  <img src="img/main/newArrivals_item003.jpg" alt="모달 반팔 홈웨어 세트">
-                  <img class="thumb_hover" src="img/main/newArrivals_item003_hover.jpg" alt="">
-                </div>
-                <div class="prod_info">
-                  <p class="prod_name">모달 반팔 홈웨어 세트</p>
-                  <p class="prod_price">69,000원</p>
-                </div>
-              </a>
+              <div class="slide_bg" style="background-image: url(&quot;img/main/main_visual_003.jpg&quot;)"></div>
+              <div class="slide_content">
+                <span class="badge">NEW</span>
+                <h2 class="prod_title">모달 저지 라운지 세트</h2>
+                <p class="prod_desc">부드러운 촉감, 하루 종일 이어지는 편안함.</p>
+              </div>
             </div>
 
             <div class="swiper-slide">
-              <a href="product-detail.html?id=na004" class="prod_card">
-                <div class="thumb_wrap">
-                  <span class="badge prod_badge">NEW</span>
-                  <img src="img/main/newArrivals_item004.jpg" alt="스트라이프 카디건 가운">
-                  <img class="thumb_hover" src="img/main/newArrivals_item004_hover.jpg" alt="">
-                </div>
-                <div class="prod_info">
-                  <p class="prod_name">스트라이프 카디건 가운</p>
-                  <p class="prod_price">79,000원</p>
-                </div>
-              </a>
+              <div class="slide_bg" style="background-image: url(&quot;img/main/main_visual_004.jpg&quot;)"></div>
+              <div class="slide_content">
+                <span class="badge">NEW</span>
+                <h2 class="prod_title">미니멀 스트라이프 파자마</h2>
+                <p class="prod_desc">군더더기 없는 디자인, 어디서든 자연스럽게.</p>
+              </div>
             </div>
 
             <div class="swiper-slide">
-              <a href="product-detail.html?id=na005" class="prod_card">
-                <div class="thumb_wrap">
-                  <span class="badge prod_badge">NEW</span>
-                  <img src="img/main/newArrivals_item005.jpg" alt="안나케 스크런치 연민트">
-                  <img class="thumb_hover" src="img/main/newArrivals_item005_hover.jpg" alt="">
-                </div>
-                <div class="prod_info">
-                  <p class="prod_name">안나케 스크런치 연민트 (60수)</p>
-                  <p class="prod_price">16,000원</p>
-                </div>
-              </a>
+              <div class="slide_bg" style="background-image: url(&quot;img/main/main_visual_005.jpg&quot;)"></div>
+              <div class="slide_content">
+                <span class="badge">NEW</span>
+                <h2 class="prod_title">올데이 카디건 홈웨어</h2>
+                <p class="prod_desc">집 앞 산책부터 재택근무까지, 하나의 옷으로.</p>
+              </div>
             </div>
+          </div>
+          <div class="swiper_nav swiper_prev"><img src="/lecture1/cozama_project/img/icon/prev_btn.svg" alt="이전" /></div>
+          <div class="swiper_nav swiper_next"><img src="/lecture1/cozama_project/img/icon/next_btn.svg" alt="다음" /></div>
+          <div class="swiper-pagination hero_pagination"></div>
+        </article>
+      </section>
 
+      <!-- ================= 2. New Arrivals ================= -->
+      <section class="new_arrival">
+        <div class="inner">
+          <h2 class="section_title" style="font-size: 44px">NEW ARRIVALS</h2>
+          <p class="section_desc">코자마의 새로운 시즌 라인업을 가장 먼저 만나보세요.</p>
+
+          <article class="prod_grid">
+            <div class="swiper swiper-new-arrival">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na001" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item001.jpg" alt="코자마 시그니처 카라 잠옷세트" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item001_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">코자마 시그니처 카라 잠옷세트 (60수)</p>
+                      <p class="prod_price">89,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na002" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item002.jpg" alt="데일리 라운지 팬츠" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item002_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">데일리 라운지 팬츠</p>
+                      <p class="prod_price">45,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na003" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item003.jpg" alt="모달 반팔 홈웨어 세트" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item003_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">모달 반팔 홈웨어 세트</p>
+                      <p class="prod_price">69,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na004" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item004.jpg" alt="스트라이프 카디건 가운" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item004_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">스트라이프 카디건 가운</p>
+                      <p class="prod_price">79,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na005" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item005.jpg" alt="안나케 스크런치 연민트" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item005_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">안나케 스크런치 연민트 (60수)</p>
+                      <p class="prod_price">16,000원</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="swiper_nav swiper_prev"><img src="img/icon/Polygon 2 (Stroke).svg" alt="이전" /></div>
+            <div class="swiper_nav swiper_next"><img src="img/icon/Polygon 2 (Stroke)-1.svg" alt="다음" /></div>
+          </article>
+
+          <div class="section_more_wrap">
+            <a href="product-list.html?cate=new" class="more_btn"
+              >더보기 <img src="img/icon/arrow_icon.svg" alt=""
+            /></a>
           </div>
         </div>
-        <div class="swiper_nav swiper_prev"><img src="img/icon/Polygon 2 (Stroke).svg" alt="이전"></div>
-        <div class="swiper_nav swiper_next"><img src="img/icon/Polygon 2 (Stroke)-1.svg" alt="다음"></div>
-      </article>
+      </section>
 
-      <div class="section_more_wrap">
-        <a href="product-list.html?cate=new" class="more_btn">더보기 <img src="img/icon/arrow_icon.svg" alt=""></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= 3. Best Items (Sticky) ================= -->
-  <section class="best_items">
-    <div class="inner">
-      <h2 class="section_title" style="font-size:44px;">BEST ITEMS</h2>
-    </div>
-    <div class="best_items_layout">
-      <div class="best_left" style="background-image:url('img/main/sticky_area_img.webp')">
-        <div class="best_left_text">
-          <p class="info_label">COZAMA COLLECTION</p>
-          <h3 class="prod_title">가장 사랑받은 코자마의 베스트</h3>
+      <!-- ================= 3. Best Items (Sticky) ================= -->
+      <section class="best_items">
+        <div class="inner">
+          <h2 class="section_title" style="font-size: 44px">BEST ITEMS</h2>
         </div>
-      </div>
-      <div class="best_right">
+        <div class="best_items_layout">
+          <div class="best_left" style="background-image: url(&quot;img/main/sticky_area_img.webp&quot;)">
+            <div class="best_left_text">
+              <p class="info_label">COZAMA COLLECTION</p>
+              <h3 class="prod_title">가장 사랑받은 코자마의 베스트</h3>
+            </div>
+          </div>
+          <div class="best_right">
+            <div class="best_card">
+              <a href="product-detail.html?id=bi001">
+                <div class="thumb_wrap">
+                  <img src="img/main/best_items_img001.jpg" alt="앤의 조각보 반팔 여성페어 베이지" />
+                </div>
+              </a>
+              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <p class="prod_name">앤의 조각보 반팔 여성페어 베이지(40수)</p>
+              <p class="prod_price">79,000원</p>
+            </div>
 
-        <div class="best_card">
-          <a href="product-detail.html?id=bi001">
-            <div class="thumb_wrap"><img src="img/main/best_items_img001.jpg" alt="앤의 조각보 반팔 여성페어 베이지"></div>
-          </a>
-          <button type="button" class="like_btn" aria-label="좋아요">♡</button>
-          <p class="prod_name">앤의 조각보 반팔 여성페어 베이지(40수)</p>
-          <p class="prod_price">79,000원</p>
+            <div class="best_card">
+              <a href="product-detail.html?id=bi002">
+                <div class="thumb_wrap">
+                  <img src="img/main/best_items_img002.jpg" alt="코튼 셔츠 카라 원피스 잠옷" />
+                </div>
+              </a>
+              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <p class="prod_name">코튼 셔츠 카라 원피스 잠옷</p>
+              <p class="prod_price">92,000원</p>
+            </div>
+
+            <div class="best_card">
+              <a href="product-detail.html?id=bi003">
+                <div class="thumb_wrap"><img src="img/main/best_items_img003.jpg" alt="모달 라운지 투피스" /></div>
+              </a>
+              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <p class="prod_name">모달 라운지 투피스</p>
+              <p class="prod_price">68,000원</p>
+            </div>
+
+            <div class="best_card">
+              <a href="product-detail.html?id=bi004">
+                <div class="thumb_wrap">
+                  <img src="img/main/best_items_img004.png" alt="프리미엄 카디건 가운 세트" />
+                </div>
+              </a>
+              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <p class="prod_name">프리미엄 카디건 가운 세트</p>
+              <p class="prod_price">118,000원</p>
+            </div>
+
+            <div class="best_card">
+              <a href="product-detail.html?id=bi005">
+                <div class="thumb_wrap">
+                  <img src="img/main/best_items_img005.png" alt="베이직 크루넥 홈웨어 세트" />
+                </div>
+              </a>
+              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <p class="prod_name">베이직 크루넥 홈웨어 세트</p>
+              <p class="prod_price">58,000원</p>
+            </div>
+
+            <div class="best_card">
+              <a href="product-detail.html?id=bi006">
+                <div class="thumb_wrap"><img src="img/main/best_items_img006.jpg" alt="스트라이프 반팔 파자마" /></div>
+              </a>
+              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <p class="prod_name">스트라이프 반팔 파자마</p>
+              <p class="prod_price">65,000원</p>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div class="best_card">
-          <a href="product-detail.html?id=bi002">
-            <div class="thumb_wrap"><img src="img/main/best_items_img002.jpg" alt="코튼 셔츠 카라 원피스 잠옷"></div>
-          </a>
-          <button type="button" class="like_btn" aria-label="좋아요">♡</button>
-          <p class="prod_name">코튼 셔츠 카라 원피스 잠옷</p>
-          <p class="prod_price">92,000원</p>
+      <!-- ================= 4. Mid Banner 50:50 ================= -->
+      <section class="mid_banner">
+        <div class="banner_container">
+          <article class="banner_left">
+            <span class="badge" style="background: transparent; color: #c85a32; padding: 0">WELCOME GIFT</span>
+            <h2 class="banner_title">코자마와 함께 시작하는 아늑한 일상</h2>
+            <p class="banner_desc">
+              지금 신규 가입 시, 첫 구매에 사용할 수 있는 10% 웰컴 쿠폰과 무료배송 혜택을 드립니다.
+            </p>
+            <a href="join.html" class="btn btn_primary btn_join">첫 편안함 만나보기 (JOIN NOW)</a>
+          </article>
+          <article class="banner_right">
+            <span class="badge" style="background: transparent; color: #8a95a5; padding: 0">COZAMA JOURNAL</span>
+            <h2 class="banner_title">침대 위에서 테라스까지, 일상이 되는 룩</h2>
+            <p class="banner_desc">
+              홈웨어의 경계를 넘어 당신의 하루 모든 순간에 자연스럽게 스며드는 코자마만의 믹스앤매치 스타일링 가이드를
+              만나보세요.
+            </p>
+            <a href="lookbook.html" class="btn btn_outline_sub btn_lookbook">스타일 룩북 보기 (DISCOVER)</a>
+          </article>
         </div>
+      </section>
 
-        <div class="best_card">
-          <a href="product-detail.html?id=bi003">
-            <div class="thumb_wrap"><img src="img/main/best_items_img003.jpg" alt="모달 라운지 투피스"></div>
-          </a>
-          <button type="button" class="like_btn" aria-label="좋아요">♡</button>
-          <p class="prod_name">모달 라운지 투피스</p>
-          <p class="prod_price">68,000원</p>
+      <!-- ================= 5. Review & Notice ================= -->
+      <section class="review_notice">
+        <div class="inner">
+          <div class="review_notice_head">
+            <h2 class="section_title">REVIEW</h2>
+            <a href="review.html" class="view_all">VIEW ALL →</a>
+          </div>
+
+          <div class="review_gallery">
+            <a href="product-detail.html?id=na001#review" class="review_card">
+              <div class="thumb_wrap"><img src="img/main/review_img001.jpg" alt="리뷰 이미지" /></div>
+              <p class="review_rating">★★★★★</p>
+              <p class="review_text">촉감이 정말 부드럽고 핏이 예뻐서 그냥 외출복으로도 입고 다녀요.</p>
+              <p class="review_meta">김** | 2026.06.20</p>
+            </a>
+            <a href="product-detail.html?id=na002#review" class="review_card">
+              <div class="thumb_wrap"><img src="img/main/review_img002.jpg" alt="리뷰 이미지" /></div>
+              <p class="review_rating">★★★★★</p>
+              <p class="review_text">사이즈 free라 부담없고, 배송도 빨라서 좋았습니다.</p>
+              <p class="review_meta">이** | 2026.06.18</p>
+            </a>
+            <a href="product-detail.html?id=na003#review" class="review_card">
+              <div class="thumb_wrap"><img src="img/main/review_img003.jpg" alt="리뷰 이미지" /></div>
+              <p class="review_rating">★★★★☆</p>
+              <p class="review_text">재택근무할 때 진짜 좋아요. 화상회의 때도 단정해 보여요.</p>
+              <p class="review_meta">박** | 2026.06.15</p>
+            </a>
+            <a href="product-detail.html?id=na004#review" class="review_card">
+              <div class="thumb_wrap"><img src="img/main/review_img004.jpg" alt="리뷰 이미지" /></div>
+              <p class="review_rating">★★★★★</p>
+              <p class="review_text">두께감이 적당해서 비치지 않고 세탁 후에도 변형이 없어요.</p>
+              <p class="review_meta">최** | 2026.06.10</p>
+            </a>
+            <a href="product-detail.html?id=na005#review" class="review_card">
+              <div class="thumb_wrap"><img src="img/main/review_img005.jpg" alt="리뷰 이미지" /></div>
+              <p class="review_rating">★★★★★</p>
+              <p class="review_text">선물용으로 구매했는데 포장부터 만족스러웠습니다.</p>
+              <p class="review_meta">정** | 2026.06.05</p>
+            </a>
+          </div>
+
+          <div class="notice_bar">
+            <div class="notice_left">
+              <span class="notice_label">NOTICE</span>
+              <a href="notice.html" class="notice_item_title">[공지] 코자마 홈페이지가 새롭게 오픈했습니다.</a>
+            </div>
+            <a href="notice.html" class="notice_more"><img src="img/icon/plus_icon.svg" alt="더보기" /></a>
+          </div>
         </div>
+      </section>
+    </main>
 
-        <div class="best_card">
-          <a href="product-detail.html?id=bi004">
-            <div class="thumb_wrap"><img src="img/main/best_items_img004.png" alt="프리미엄 카디건 가운 세트"></div>
-          </a>
-          <button type="button" class="like_btn" aria-label="좋아요">♡</button>
-          <p class="prod_name">프리미엄 카디건 가운 세트</p>
-          <p class="prod_price">118,000원</p>
-        </div>
-
-        <div class="best_card">
-          <a href="product-detail.html?id=bi005">
-            <div class="thumb_wrap"><img src="img/main/best_items_img005.png" alt="베이직 크루넥 홈웨어 세트"></div>
-          </a>
-          <button type="button" class="like_btn" aria-label="좋아요">♡</button>
-          <p class="prod_name">베이직 크루넥 홈웨어 세트</p>
-          <p class="prod_price">58,000원</p>
-        </div>
-
-        <div class="best_card">
-          <a href="product-detail.html?id=bi006">
-            <div class="thumb_wrap"><img src="img/main/best_items_img006.jpg" alt="스트라이프 반팔 파자마"></div>
-          </a>
-          <button type="button" class="like_btn" aria-label="좋아요">♡</button>
-          <p class="prod_name">스트라이프 반팔 파자마</p>
-          <p class="prod_price">65,000원</p>
-        </div>
-
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+      <div class="inner footer_container">
+        <article class="footer_info">
+          <div class="footer_logo"><img src="img/logo/logo.svg" alt="COZAMA" /></div>
+          <div class="footer_biz">
+            <span>상호명 : 코자마(COZAMA) | 대표자명 : 홍길동</span>
+            <span>전화번호 : 02-1234-5678 | 사업자등록번호 : 123-45-67890</span>
+            <span>통신판매업신고번호 : 제2026-서울마포-1234호</span>
+            <span>개인정보관리책임자 : 홍길동 | 이메일 : honggil@naver.com</span>
+            <span>주소 : 서울특별시 마포구 동교동 166-14 스타피카소 4층</span>
+          </div>
+        </article>
+        <article class="footer_nav">
+          <p class="footer_nav_title">SITE MAP</p>
+          <ul>
+            <li><a href="about.html">ABOUT US</a></li>
+            <li><a href="product-list.html?cate=all">SHOP ALL</a></li>
+            <li><a href="product-list.html?cate=new">NEW</a></li>
+            <li><a href="product-list.html?cate=best">BEST</a></li>
+            <li><a href="product-list.html?cate=women">WOMEN</a></li>
+            <li><a href="product-list.html?cate=men">MEN</a></li>
+            <li><a href="lookbook.html">LOOKBOOK</a></li>
+            <li><a href="notice.html">NOTICE</a></li>
+            <li><a href="review.html">REVIEW</a></li>
+          </ul>
+        </article>
+        <article class="footer_cs">
+          <p class="footer_cs_title">CUSTOMER CENTER</p>
+          <div class="footer_cs_info">
+            <p>고객센터 : 02-1234-5678</p>
+            <p>문의메일 : honggil@naver.com</p>
+            <p>운영시간 : MON-FRI 10:00 - 17:00</p>
+            <p>점심시간 : LUNCH 12:30 - 13:30</p>
+          </div>
+          <a href="mailto:honggil@naver.com" class="footer_cs_link">입점 및 제휴문의</a>
+        </article>
       </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- ================= 4. Mid Banner 50:50 ================= -->
-  <section class="mid_banner">
-    <div class="banner_container">
-      <article class="banner_left">
-        <span class="badge" style="background:transparent;color:#C85A32;padding:0;">WELCOME GIFT</span>
-        <h2 class="banner_title">코자마와 함께 시작하는 아늑한 일상</h2>
-        <p class="banner_desc">지금 신규 가입 시, 첫 구매에 사용할 수 있는 10% 웰컴 쿠폰과 무료배송 혜택을 드립니다.</p>
-        <a href="join.html" class="btn btn_primary btn_join">첫 편안함 만나보기 (JOIN NOW)</a>
-      </article>
-      <article class="banner_right">
-        <span class="badge" style="background:transparent;color:#8A95A5;padding:0;">COZAMA JOURNAL</span>
-        <h2 class="banner_title">침대 위에서 테라스까지, 일상이 되는 룩</h2>
-        <p class="banner_desc">홈웨어의 경계를 넘어 당신의 하루 모든 순간에 자연스럽게 스며드는 코자마만의 믹스앤매치 스타일링 가이드를 만나보세요.</p>
-        <a href="lookbook.html" class="btn btn_outline_sub btn_lookbook">스타일 룩북 보기 (DISCOVER)</a>
-      </article>
-    </div>
-  </section>
-
-  <!-- ================= 5. Review & Notice ================= -->
-  <section class="review_notice">
-    <div class="inner">
-      <div class="review_notice_head">
-        <h2 class="section_title">REVIEW</h2>
-        <a href="review.html" class="view_all">VIEW ALL →</a>
-      </div>
-
-      <div class="review_gallery">
-        <a href="product-detail.html?id=na001#review" class="review_card">
-          <div class="thumb_wrap"><img src="img/main/review_img001.jpg" alt="리뷰 이미지"></div>
-          <p class="review_rating">★★★★★</p>
-          <p class="review_text">촉감이 정말 부드럽고 핏이 예뻐서 그냥 외출복으로도 입고 다녀요.</p>
-          <p class="review_meta">김** | 2026.06.20</p>
-        </a>
-        <a href="product-detail.html?id=na002#review" class="review_card">
-          <div class="thumb_wrap"><img src="img/main/review_img002.jpg" alt="리뷰 이미지"></div>
-          <p class="review_rating">★★★★★</p>
-          <p class="review_text">사이즈 free라 부담없고, 배송도 빨라서 좋았습니다.</p>
-          <p class="review_meta">이** | 2026.06.18</p>
-        </a>
-        <a href="product-detail.html?id=na003#review" class="review_card">
-          <div class="thumb_wrap"><img src="img/main/review_img003.jpg" alt="리뷰 이미지"></div>
-          <p class="review_rating">★★★★☆</p>
-          <p class="review_text">재택근무할 때 진짜 좋아요. 화상회의 때도 단정해 보여요.</p>
-          <p class="review_meta">박** | 2026.06.15</p>
-        </a>
-        <a href="product-detail.html?id=na004#review" class="review_card">
-          <div class="thumb_wrap"><img src="img/main/review_img004.jpg" alt="리뷰 이미지"></div>
-          <p class="review_rating">★★★★★</p>
-          <p class="review_text">두께감이 적당해서 비치지 않고 세탁 후에도 변형이 없어요.</p>
-          <p class="review_meta">최** | 2026.06.10</p>
-        </a>
-        <a href="product-detail.html?id=na005#review" class="review_card">
-          <div class="thumb_wrap"><img src="img/main/review_img005.jpg" alt="리뷰 이미지"></div>
-          <p class="review_rating">★★★★★</p>
-          <p class="review_text">선물용으로 구매했는데 포장부터 만족스러웠습니다.</p>
-          <p class="review_meta">정** | 2026.06.05</p>
-        </a>
-      </div>
-
-      <div class="notice_bar">
-        <div class="notice_left">
-          <span class="notice_label">NOTICE</span>
-          <a href="notice.html" class="notice_item_title">[공지] 코자마 홈페이지가 새롭게 오픈했습니다.</a>
-        </div>
-        <a href="notice.html" class="notice_more"><img src="img/icon/plus_icon.svg" alt="더보기"></a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- ================= FOOTER ================= -->
-<footer class="footer">
-  <div class="inner footer_container">
-    <article class="footer_info">
-      <div class="footer_logo"><img src="img/logo/logo.svg" alt="COZAMA"></div>
-      <div class="footer_biz">
-        <span>상호명 : 코자마(COZAMA) | 대표자명 : 홍길동</span>
-        <span>전화번호 : 02-1234-5678 | 사업자등록번호 : 123-45-67890</span>
-        <span>통신판매업신고번호 : 제2026-서울마포-1234호</span>
-        <span>개인정보관리책임자 : 홍길동 | 이메일 : honggil@naver.com</span>
-        <span>주소 : 서울특별시 마포구 동교동 166-14 스타피카소 4층</span>
-      </div>
-    </article>
-    <article class="footer_nav">
-      <p class="footer_nav_title">SITE MAP</p>
-      <ul>
-        <li><a href="about.html">ABOUT US</a></li>
-        <li><a href="product-list.html?cate=all">SHOP ALL</a></li>
-        <li><a href="product-list.html?cate=new">NEW</a></li>
-        <li><a href="product-list.html?cate=best">BEST</a></li>
-        <li><a href="product-list.html?cate=women">WOMEN</a></li>
-        <li><a href="product-list.html?cate=men">MEN</a></li>
-        <li><a href="lookbook.html">LOOKBOOK</a></li>
-        <li><a href="notice.html">NOTICE</a></li>
-        <li><a href="review.html">REVIEW</a></li>
-      </ul>
-    </article>
-    <article class="footer_cs">
-      <p class="footer_cs_title">CUSTOMER CENTER</p>
-      <div class="footer_cs_info">
-        <p>고객센터 : 02-1234-5678</p>
-        <p>문의메일 : honggil@naver.com</p>
-        <p>운영시간 : MON-FRI 10:00 - 17:00</p>
-        <p>점심시간 : LUNCH 12:30 - 13:30</p>
-      </div>
-      <a href="mailto:honggil@naver.com" class="footer_cs_link">입점 및 제휴문의</a>
-    </article>
-  </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="js/supabase-client.js"></script>
-<script src="js/common.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="js/main.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>

@@ -86,6 +86,8 @@
   display: flex;
   align-items: flex-end;
   padding: 60px;
+  max-width: 50%;
+  width:100%;
 }
 .best_left .best_left_text { color: var(--color-white); }
 .best_left .best_left_text .info_label { color: var(--color-white); opacity: .85; margin-bottom: 8px; }
