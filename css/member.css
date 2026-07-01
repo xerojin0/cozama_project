@@ -1,0 +1,98 @@
+/* ===================================================================
+   COZAMA member.css (login / join / find-account / mypage 공용 폼)
+=================================================================== */
+
+.form_page { padding: 60px 0 160px; }
+.form_wrap { max-width: 480px; margin: 0 auto; }
+.form_wrap.wide { max-width: 640px; }
+
+.form_logo { text-align: center; margin-bottom: 40px; }
+.form_logo img { height: 24px; margin: 0 auto; }
+
+/* ---- Tab switch ---- */
+.tab_switch { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: 40px; }
+.tab_switch button {
+  flex: 1; padding: 16px 0; font-size: 15px; font-weight: 600; color: var(--color-sub);
+  border-bottom: 2px solid transparent;
+}
+.tab_switch button.active { color: var(--color-text); border-bottom-color: var(--color-primary); }
+.tab_panel { display: none; }
+.tab_panel.active { display: block; }
+
+/* ---- Form elements ---- */
+.form_group { margin-bottom: 18px; }
+.form_group > label { display: block; font-size: 13px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.form_input, .form_select, .form_textarea {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--color-border);
+  font-size: 14px; color: var(--color-text); background: var(--color-white);
+}
+.form_input:focus, .form_select:focus, .form_textarea:focus { outline: none; border-color: var(--color-primary); }
+.form_textarea { resize: vertical; min-height: 100px; }
+.form_row { display: flex; gap: 8px; align-items: center; }
+.form_row .form_select { flex: 0 0 100px; }
+.form_row .form_input { flex: 1; }
+.form_row span.sep { color: var(--color-sub); }
+.form_hint { font-size: 12px; color: var(--color-sub); margin-top: 6px; }
+.form_error { font-size: 12px; color: var(--color-primary); margin-top: 6px; display: none; }
+.form_error.show { display: block; }
+.form_addr_row { display: flex; gap: 8px; margin-bottom: 8px; }
+.form_addr_row .form_input { flex: 1; }
+.form_addr_row .btn { flex: 0 0 auto; padding: 0 20px; font-size: 13px; }
+
+.form_check_row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.form_check_row input[type="checkbox"],
+.form_check_row input[type="radio"] { width: 16px; height: 16px; accent-color: var(--color-primary); }
+.form_check_row label { font-size: 13px; color: var(--color-body); }
+.form_check_row.all_agree { padding-bottom: 16px; border-bottom: 1px solid var(--color-border); margin-bottom: 20px; }
+.form_check_row.all_agree label { font-weight: 700; color: var(--color-text); font-size: 15px; }
+
+.radio_group { display: flex; gap: 20px; }
+.radio_group label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-body); }
+.radio_group input[type="radio"] { accent-color: var(--color-primary); }
+
+.btn_submit { width: 100%; padding: 16px 0; font-size: 16px; }
+
+.form_links { display: flex; justify-content: center; gap: 16px; margin-top: 24px; font-size: 13px; color: var(--color-sub); }
+.form_links a:hover { color: var(--color-primary); }
+
+/* ---- Join steps ---- */
+.step_indicator { display: flex; justify-content: center; gap: 40px; margin-bottom: 60px; }
+.step_indicator .step { font-size: 13px; font-weight: 600; color: var(--color-sub); position: relative; }
+.step_indicator .step.active { color: var(--color-primary); }
+.join_step { display: none; }
+.join_step.active { display: block; }
+.form_section_title { font-size: 16px; font-weight: 600; margin: 32px 0 16px; }
+.form_section_title:first-child { margin-top: 0; }
+
+/* ---- Complete page ---- */
+.complete_box { text-align: center; padding: 80px 0; }
+.complete_box .complete_msg { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
+.complete_box .complete_date { font-size: 14px; color: var(--color-sub); margin-bottom: 40px; }
+
+/* ---- Mypage ---- */
+.mypage_layout { display: flex; gap: 60px; align-items: flex-start; }
+.mypage_side { flex: 0 0 220px; position: sticky; top: calc(var(--header-h) + 40px); }
+.mypage_side .member_summary { padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--color-border); }
+.mypage_side .member_summary .member_no { font-size: 12px; color: var(--color-sub); }
+.mypage_side .member_summary .member_name { font-size: 18px; font-weight: 600; margin-top: 4px; }
+.mypage_nav a { display: block; padding: 12px 0; font-size: 14px; color: var(--color-body); }
+.mypage_nav a.active, .mypage_nav a:hover { color: var(--color-primary); font-weight: 600; }
+.mypage_content { flex: 1; }
+.mypage_panel { display: none; }
+.mypage_panel.active { display: block; }
+.mypage_panel h3.form_section_title { margin-top: 0; }
+
+.order_status_grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 40px; }
+.order_status_grid .status_box { text-align: center; padding: 24px 8px; background: var(--color-bg); }
+.order_status_grid .status_count { font-size: 24px; font-weight: 600; }
+.order_status_grid .status_label { font-size: 12px; color: var(--color-body); margin-top: 6px; }
+
+.simple_table { width: 100%; border-collapse: collapse; }
+.simple_table th, .simple_table td { padding: 14px 12px; font-size: 13px; border-bottom: 1px solid var(--color-border); text-align: left; }
+.simple_table th { color: var(--color-sub); font-weight: 600; }
+.simple_table td.ellipsis { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.recent_view_grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.recent_view_grid .rv_card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 8px; }
+.recent_view_grid .rv_card .prod_name { font-size: 13px; margin-bottom: 4px; }
+.recent_view_grid .rv_card .prod_price { font-size: 13px; font-weight: 600; }

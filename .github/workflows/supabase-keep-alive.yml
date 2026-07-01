@@ -1,0 +1,27 @@
+# .github/workflows/supabase-keep-alive.yml
+
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # 주 3회 실행 (월, 수, 금 오전 9시 UTC = 오후 6시 KST)
+    - cron: '0 9 * * 1,3,5'
+  workflow_dispatch:  # 수동 실행 가능
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Health Check
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.COZAMA_SUPABASE_URL }}/rest/v1/" \
+            -H "apikey: ${{ secrets.COZAMA_SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.COZAMA_SUPABASE_ANON_KEY }}")
+          echo "HTTP Status: $response"
+          if [ "$response" -ge 200 ] && [ "$response" -lt 300 ]; then
+            echo "Supabase ping successful!"
+          else
+            echo "Supabase ping failed with status $response"
+            exit 1
+          fi
