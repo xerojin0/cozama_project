@@ -69,7 +69,6 @@
 .detail_gallery_nav.prev { left: 16px; }
 .detail_gallery_nav.next { right: 16px; }
 .detail_gallery_nav img { width: 12px; }
-.detail_gallery_nav.prev img { transform: rotate(180deg); }
 .detail_thumb_list { display: flex; gap: 12px; margin-top: 16px; }
 .detail_thumb_list .thumb_item {
   width: 150px; height: 150px; border-radius: 20px; overflow: hidden;
