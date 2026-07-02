@@ -15,18 +15,20 @@ function getParams() {
   return {
     cate: params.get('cate') || 'all',
     page: Number(params.get('page') || 1),
+    search: params.get('search') || '',
   };
 }
 
 async function renderList(forcePage) {
-  const { cate, page: pageFromUrl } = getParams();
+  const { cate, page: pageFromUrl, search } = getParams();
   const page = forcePage || pageFromUrl;
-  document.getElementById('listTitle').textContent = CATE_TITLE[cate] || 'ALL';
+  document.getElementById('listTitle').textContent = search ? `'${search}' 검색결과` : (CATE_TITLE[cate] || 'ALL');
 
   const sort = document.getElementById('sortSelect').value;
   let query = window.supabaseClient.from('products').select('*', { count: 'exact' });
 
-  if (cate === 'women' || cate === 'men') query = query.eq('category', cate);
+  if (search) query = query.ilike('name', `%${search}%`);
+  else if (cate === 'women' || cate === 'men') query = query.eq('category', cate);
   else if (cate === 'new') query = query.eq('is_new', true);
   else if (cate === 'best') query = query.eq('is_best', true);
   else if (cate === 'sale') query = query.eq('is_sale', true);
@@ -84,21 +86,34 @@ function renderCard(p) {
   `;
 }
 
-function bindCardActions(grid) {
-  grid.querySelectorAll('.wish_btn').forEach((btn) => {
+async function bindCardActions(grid) {
+  const wishBtns = [...grid.querySelectorAll('.wish_btn')];
+  const likedIds = await window.CozamaWishlist.getLikedIds(wishBtns.map((btn) => btn.dataset.id));
+
+  wishBtns.forEach((btn) => {
+    if (likedIds.has(btn.dataset.id)) {
+      btn.classList.add('active');
+      btn.textContent = '♥';
+    }
     btn.addEventListener('click', async () => {
-      const { data } = await window.supabaseClient.auth.getSession();
-      if (!data.session) { location.href = 'login.html'; return; }
-      await window.supabaseClient.from('wishlist').insert({ user_id: data.session.user.id, product_id: btn.dataset.id });
-      btn.classList.toggle('active');
-      btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+      const isActive = btn.classList.contains('active');
+      const result = await window.CozamaWishlist.toggle(btn.dataset.id, isActive);
+      if (result === null) return;
+      btn.classList.toggle('active', result);
+      btn.textContent = result ? '♥' : '♡';
     });
   });
   grid.querySelectorAll('.cart_add_btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const { data } = await window.supabaseClient.auth.getSession();
-      if (!data.session) { location.href = 'login.html'; return; }
+      if (!data.session) {
+        window.CozamaGuestCart.add(btn.dataset.id, 'FREE', 1);
+        window.CozamaCart.refreshBadge();
+        alert('장바구니에 담았습니다.');
+        return;
+      }
       await window.supabaseClient.from('cart_items').insert({ user_id: data.session.user.id, product_id: btn.dataset.id, quantity: 1 });
+      window.CozamaCart.refreshBadge();
       alert('장바구니에 담았습니다.');
     });
   });

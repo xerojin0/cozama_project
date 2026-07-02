@@ -16,7 +16,7 @@
     <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
     <div class="header_right">
       <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
+      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""><span class="cart_badge"></span></a>
     </div>
   </div>
 </header>
@@ -27,7 +27,7 @@
     <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
     <div class="gnb_util">
       <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
+      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""><span class="cart_badge"></span></a>
     </div>
   </div>
   <div class="gnb_auth" data-auth="out">
@@ -86,6 +86,8 @@
           <button type="button" class="wish_btn" id="detailWishBtn">♡ 좋아요</button>
           <button type="button" id="detailShareBtn">🔗 링크 공유</button>
         </div>
+
+        <div class="detail_shipping_badge">국내배송</div>
 
         <div class="detail_option">
           <label for="optionSelect">옵션 선택</label>
@@ -231,6 +233,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="js/product-detail.js"></script>
 </body>
 </html>

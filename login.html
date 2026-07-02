@@ -15,7 +15,7 @@
     <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
     <div class="header_right">
       <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
+      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""><span class="cart_badge"></span></a>
     </div>
   </div>
 </header>
@@ -26,7 +26,7 @@
     <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
     <div class="gnb_util">
       <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
+      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""><span class="cart_badge"></span></a>
     </div>
   </div>
   <div class="gnb_auth" data-auth="out">
@@ -117,7 +117,15 @@
             <input type="password" id="guestOrderPw" class="form_input" placeholder="주문 시 설정한 비밀번호" required>
           </div>
           <button type="submit" class="btn btn_primary btn_submit">비회원 주문조회</button>
+          <p class="form_error" id="guestOrderError">주문자명, 주문번호, 비밀번호를 다시 확인해주세요.</p>
         </form>
+
+        <div id="guestOrderResult" style="display:none; margin-top:24px;">
+          <table class="simple_table">
+            <thead><tr><th>주문번호</th><th>상품명</th><th>결제금액</th><th>상태</th><th>주문일</th></tr></thead>
+            <tbody id="guestOrderResultBody"></tbody>
+          </table>
+        </div>
       </div>
 
     </div>

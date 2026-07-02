@@ -22,7 +22,7 @@
           <button type="button" class="icon_btn" aria-label="검색">
             <img src="img/icon/search_icon.svg" alt="" />
           </button>
-          <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt="" /></a>
+          <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt="" /><span class="cart_badge"></span></a>
         </div>
       </div>
     </header>
@@ -41,7 +41,7 @@
             <button type="button" class="icon_btn" aria-label="검색">
               <img src="img/icon/search_icon.svg" alt="" />
             </button>
-            <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt="" /></a>
+            <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt="" /><span class="cart_badge"></span></a>
           </div>
         </div>
         <div class="gnb_auth" data-auth="out">
@@ -232,6 +232,76 @@
                     </div>
                   </a>
                 </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na001" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item001.jpg" alt="코자마 시그니처 카라 잠옷세트" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item001_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">코자마 시그니처 카라 잠옷세트 (60수)</p>
+                      <p class="prod_price">89,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na002" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item002.jpg" alt="데일리 라운지 팬츠" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item002_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">데일리 라운지 팬츠</p>
+                      <p class="prod_price">45,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na003" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item003.jpg" alt="모달 반팔 홈웨어 세트" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item003_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">모달 반팔 홈웨어 세트</p>
+                      <p class="prod_price">69,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na004" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item004.jpg" alt="스트라이프 카디건 가운" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item004_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">스트라이프 카디건 가운</p>
+                      <p class="prod_price">79,000원</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div class="swiper-slide">
+                  <a href="product-detail.html?id=na005" class="prod_card">
+                    <div class="thumb_wrap">
+                      <span class="badge prod_badge">NEW</span>
+                      <img src="img/main/newArrivals_item005.jpg" alt="안나케 스크런치 연민트" />
+                      <img class="thumb_hover" src="img/main/newArrivals_item005_hover.jpg" alt="" />
+                    </div>
+                    <div class="prod_info">
+                      <p class="prod_name">안나케 스크런치 연민트 (60수)</p>
+                      <p class="prod_price">16,000원</p>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             <div class="swiper_nav swiper_prev"><img src="img/icon/prev_btn.svg" alt="이전" /></div>
@@ -265,7 +335,7 @@
                   <img src="img/main/best_items_img001.jpg" alt="앤의 조각보 반팔 여성페어 베이지" />
                 </div>
               </a>
-              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <button type="button" class="like_btn" aria-label="좋아요" data-code="bi001">♡</button>
               <p class="prod_name">앤의 조각보 반팔 여성페어 베이지(40수)</p>
               <p class="prod_price">79,000원</p>
             </div>
@@ -276,7 +346,7 @@
                   <img src="img/main/best_items_img002.jpg" alt="코튼 셔츠 카라 원피스 잠옷" />
                 </div>
               </a>
-              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <button type="button" class="like_btn" aria-label="좋아요" data-code="bi002">♡</button>
               <p class="prod_name">코튼 셔츠 카라 원피스 잠옷</p>
               <p class="prod_price">92,000원</p>
             </div>
@@ -285,7 +355,7 @@
               <a href="product-detail.html?id=bi003">
                 <div class="thumb_wrap"><img src="img/main/best_items_img003.jpg" alt="모달 라운지 투피스" /></div>
               </a>
-              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <button type="button" class="like_btn" aria-label="좋아요" data-code="bi003">♡</button>
               <p class="prod_name">모달 라운지 투피스</p>
               <p class="prod_price">68,000원</p>
             </div>
@@ -296,7 +366,7 @@
                   <img src="img/main/best_items_img004.png" alt="프리미엄 카디건 가운 세트" />
                 </div>
               </a>
-              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <button type="button" class="like_btn" aria-label="좋아요" data-code="bi004">♡</button>
               <p class="prod_name">프리미엄 카디건 가운 세트</p>
               <p class="prod_price">118,000원</p>
             </div>
@@ -307,7 +377,7 @@
                   <img src="img/main/best_items_img005.png" alt="베이직 크루넥 홈웨어 세트" />
                 </div>
               </a>
-              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <button type="button" class="like_btn" aria-label="좋아요" data-code="bi005">♡</button>
               <p class="prod_name">베이직 크루넥 홈웨어 세트</p>
               <p class="prod_price">58,000원</p>
             </div>
@@ -316,7 +386,7 @@
               <a href="product-detail.html?id=bi006">
                 <div class="thumb_wrap"><img src="img/main/best_items_img006.jpg" alt="스트라이프 반팔 파자마" /></div>
               </a>
-              <button type="button" class="like_btn" aria-label="좋아요">♡</button>
+              <button type="button" class="like_btn" aria-label="좋아요" data-code="bi006">♡</button>
               <p class="prod_name">스트라이프 반팔 파자마</p>
               <p class="prod_price">65,000원</p>
             </div>

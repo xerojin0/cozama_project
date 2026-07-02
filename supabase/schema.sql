@@ -1,6 +1,9 @@
 -- ===================================================================
 -- COZAMA (cozama_project_DB) 스키마
--- 다음 세션에서 Supabase MCP(execute_sql / apply_migration)로 그대로 적용한다.
+-- 신규(fresh) 프로젝트 기준 전체 스키마. 이미 적용된 라이브 DB에는
+-- supabase/migrations/ 하위의 증분 마이그레이션 파일을 순서대로 적용한다.
+-- Supabase MCP가 연결된 세션에서는 execute_sql / apply_migration으로,
+-- 그렇지 않으면 Supabase 대시보드 SQL Editor에서 직접 실행한다.
 -- ===================================================================
 
 -- ---------------------------------------------------------------
@@ -168,8 +171,11 @@ create table if not exists user_coupons (
 create table if not exists orders (
   id uuid primary key default gen_random_uuid(),
   order_no text unique not null,
-  user_id uuid not null references profiles(id) on delete cascade,
+  user_id uuid references profiles(id) on delete cascade, -- null이면 비회원 주문
   status text not null default '입금전', -- 입금전/배송준비중/배송중/배송완료/취소/교환/반품
+  guest_name text,     -- 비회원 주문자명
+  guest_phone text,    -- 비회원 연락처
+  guest_password text, -- 비회원 주문조회 비밀번호 (crypt() 해시 저장, RPC로만 조회/생성)
   receiver_name text,
   receiver_phone text,
   address text,
@@ -195,6 +201,12 @@ create table if not exists order_items (
   option text,
   price integer,
   quantity integer not null default 1
+);
+
+alter table orders drop constraint if exists orders_member_or_guest;
+alter table orders add constraint orders_member_or_guest check (
+  (user_id is not null)
+  or (guest_name is not null and guest_phone is not null and guest_password is not null)
 );
 
 -- ---------------------------------------------------------------
@@ -304,6 +316,101 @@ $$;
 
 grant execute on function get_email_by_user_id(text) to anon, authenticated;
 grant execute on function find_user_id(text, text, text) to anon, authenticated;
+
+-- 회원가입용: 아이디 중복 확인 (비로그인 상태에서 profiles.user_id 존재 여부만 확인)
+create or replace function is_user_id_available(p_user_id text)
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select not exists (select 1 from profiles where user_id = p_user_id);
+$$;
+
+grant execute on function is_user_id_available(text) to anon, authenticated;
+
+-- 비회원 주문 생성 (비밀번호 crypt() 해시 저장, orders + order_items 함께 insert)
+create or replace function create_guest_order(
+  p_order_no text,
+  p_guest_name text,
+  p_guest_phone text,
+  p_guest_password text,
+  p_receiver_name text,
+  p_receiver_phone text,
+  p_address text,
+  p_address_detail text,
+  p_delivery_message text,
+  p_payment_method text,
+  p_bank_name text,
+  p_depositor_name text,
+  p_shipping_fee integer,
+  p_total_amount integer,
+  p_items jsonb
+)
+returns table (id uuid, order_no text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_order_id uuid;
+begin
+  insert into orders (
+    order_no, user_id, status, guest_name, guest_phone, guest_password,
+    receiver_name, receiver_phone, address, address_detail, delivery_message,
+    payment_method, bank_name, depositor_name, shipping_fee, total_amount
+  ) values (
+    p_order_no, null, '입금전', p_guest_name, p_guest_phone, crypt(p_guest_password, gen_salt('bf')),
+    p_receiver_name, p_receiver_phone, p_address, p_address_detail, p_delivery_message,
+    p_payment_method, p_bank_name, p_depositor_name, p_shipping_fee, p_total_amount
+  ) returning orders.id into v_order_id;
+
+  insert into order_items (order_id, product_id, product_name, option, price, quantity)
+  select v_order_id, (item->>'product_id')::uuid, item->>'product_name', item->>'option',
+         (item->>'price')::integer, (item->>'quantity')::integer
+  from jsonb_array_elements(p_items) as item;
+
+  return query select v_order_id, p_order_no;
+end;
+$$;
+
+grant execute on function create_guest_order(
+  text, text, text, text, text, text, text, text, text, text, text, text, integer, integer, jsonb
+) to anon, authenticated;
+
+-- 비회원 주문 조회 (주문자명 + 주문번호 + 비밀번호 검증, guest_password 원문은 응답에서 제외)
+create or replace function get_guest_order(p_order_no text, p_guest_name text, p_guest_password text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_order orders%rowtype;
+  v_items jsonb;
+begin
+  select * into v_order from orders
+  where order_no = p_order_no
+    and guest_name = p_guest_name
+    and user_id is null
+    and guest_password is not null
+    and guest_password = crypt(p_guest_password, guest_password);
+
+  if v_order.id is null then
+    return null;
+  end if;
+
+  select coalesce(jsonb_agg(oi), '[]'::jsonb) into v_items
+  from order_items oi where oi.order_id = v_order.id;
+
+  return jsonb_build_object(
+    'order', to_jsonb(v_order) - 'guest_password',
+    'items', v_items
+  );
+end;
+$$;
+
+grant execute on function get_guest_order(text, text, text) to anon, authenticated;
 
 -- ===================================================================
 -- RLS (Row Level Security)

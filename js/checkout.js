@@ -10,13 +10,18 @@ let myCoupons = [];
 let appliedCoupon = null;
 let pointBalance = 0;
 let currentPayMethod = 'bank';
+let isGuest = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await window.supabaseClient.auth.getSession();
-  if (!data.session) { location.href = 'login.html'; return; }
-  currentUser = data.session.user;
+  if (data.session) {
+    currentUser = data.session.user;
+    await loadProfile();
+  } else {
+    isGuest = true;
+    setupGuestUI();
+  }
 
-  await loadProfile();
   await loadOrderLines();
   renderOrderProducts();
   updateSummary();
@@ -30,6 +35,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   initPayMethodTabs();
   initPayButton();
 });
+
+function setupGuestUI() {
+  document.getElementById('guestInfoSection').style.display = 'block';
+  document.getElementById('discountSection').style.display = 'none';
+  document.getElementById('loadMyInfoBtn').style.display = 'none';
+  document.getElementById('pointEarnBox').style.display = 'none';
+}
 
 async function loadProfile() {
   const { data } = await window.supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single();
@@ -49,6 +61,17 @@ async function loadOrderLines() {
     const saved = JSON.parse(sessionStorage.getItem('cozama_buy_now') || 'null');
     if (saved) {
       orderLines = saved.lines.map((l) => ({ product: saved.product, option: l.option, quantity: l.qty }));
+    }
+  } else if (mode === 'guestcart') {
+    const lines = JSON.parse(sessionStorage.getItem('cozama_checkout_guest_lines') || '[]');
+    if (lines.length) {
+      const productIds = [...new Set(lines.map((l) => l.product_id))];
+      const { data: products } = await window.supabaseClient.from('products').select('*').in('id', productIds);
+      const productsById = {};
+      (products || []).forEach((p) => { productsById[p.id] = p; });
+      orderLines = lines
+        .map((l) => ({ product: productsById[l.product_id], option: l.option, quantity: l.quantity }))
+        .filter((l) => l.product);
     }
   } else {
     const ids = JSON.parse(sessionStorage.getItem('cozama_checkout_cart_ids') || '[]');
@@ -222,65 +245,133 @@ function initPayButton() {
       return;
     }
 
-    const productAmount = getProductAmount();
-    const couponDiscount = getCouponDiscount(productAmount);
-    const pointUse = Number(document.getElementById('pointUseInput').value) || 0;
-    const total = Math.max(0, productAmount + SHIPPING_FEE - couponDiscount - pointUse);
-    const pointEarn = Math.floor((productAmount - couponDiscount) * 0.01);
-
-    const deliveryMsgSelect = document.getElementById('deliveryMsgSelect').value;
-    const deliveryMsg = deliveryMsgSelect === 'custom' ? document.getElementById('deliveryMsgCustom').value : deliveryMsgSelect;
-
-    const orderNo = `ORD${Date.now()}`;
-    const { data: order, error } = await window.supabaseClient.from('orders').insert({
-      order_no: orderNo,
-      user_id: currentUser.id,
-      status: '입금전',
-      receiver_name: receiverName,
-      receiver_phone: receiverPhone,
-      address: receiverAddress,
-      address_detail: document.getElementById('receiverAddressDetail').value,
-      delivery_message: deliveryMsg,
-      payment_method: currentPayMethod,
-      bank_name: currentPayMethod === 'bank' ? document.getElementById('bankSelect').value : null,
-      depositor_name: currentPayMethod === 'bank' ? document.getElementById('depositorName').value : null,
-      coupon_id: appliedCoupon ? appliedCoupon.coupons.id : null,
-      discount_amount: couponDiscount,
-      points_used: pointUse,
-      points_earned: pointEarn,
-      shipping_fee: SHIPPING_FEE,
-      total_amount: total,
-    }).select().single();
-
-    if (error) { alert('주문 처리 중 오류가 발생했습니다.'); return; }
-
-    const orderItemRows = orderLines.map((l) => ({
-      order_id: order.id,
-      product_id: l.product.id,
-      product_name: l.product.name,
-      option: l.option,
-      price: l.product.price,
-      quantity: l.quantity,
-    }));
-    await window.supabaseClient.from('order_items').insert(orderItemRows);
-
-    if (pointUse > 0) {
-      await window.supabaseClient.from('points').insert({ user_id: currentUser.id, amount: -pointUse, reason: '주문 사용', order_id: order.id });
+    if (isGuest) {
+      await payAsGuest(receiverName, receiverPhone, receiverAddress);
+    } else {
+      await payAsMember(receiverName, receiverPhone, receiverAddress);
     }
-    if (pointEarn > 0) {
-      await window.supabaseClient.from('points').insert({ user_id: currentUser.id, amount: pointEarn, reason: '주문 적립', order_id: order.id });
-    }
-    if (appliedCoupon && appliedCoupon.id) {
-      await window.supabaseClient.from('user_coupons').update({ is_used: true, used_at: new Date().toISOString() }).eq('id', appliedCoupon.id);
-    }
-
-    const cartIds = orderLines.filter((l) => l.cartId).map((l) => l.cartId);
-    if (cartIds.length) await window.supabaseClient.from('cart_items').delete().in('id', cartIds);
-
-    sessionStorage.removeItem('cozama_buy_now');
-    sessionStorage.removeItem('cozama_checkout_cart_ids');
-
-    alert(`주문이 완료되었습니다. (주문번호 : ${orderNo})`);
-    location.href = 'mypage.html';
   });
+}
+
+function getDeliveryMessage() {
+  const deliveryMsgSelect = document.getElementById('deliveryMsgSelect').value;
+  return deliveryMsgSelect === 'custom' ? document.getElementById('deliveryMsgCustom').value : deliveryMsgSelect;
+}
+
+async function payAsMember(receiverName, receiverPhone, receiverAddress) {
+  const productAmount = getProductAmount();
+  const couponDiscount = getCouponDiscount(productAmount);
+  const pointUse = Number(document.getElementById('pointUseInput').value) || 0;
+  const total = Math.max(0, productAmount + SHIPPING_FEE - couponDiscount - pointUse);
+  const pointEarn = Math.floor((productAmount - couponDiscount) * 0.01);
+
+  const orderNo = `ORD${Date.now()}`;
+  const { data: order, error } = await window.supabaseClient.from('orders').insert({
+    order_no: orderNo,
+    user_id: currentUser.id,
+    status: '입금전',
+    receiver_name: receiverName,
+    receiver_phone: receiverPhone,
+    address: receiverAddress,
+    address_detail: document.getElementById('receiverAddressDetail').value,
+    delivery_message: getDeliveryMessage(),
+    payment_method: currentPayMethod,
+    bank_name: currentPayMethod === 'bank' ? document.getElementById('bankSelect').value : null,
+    depositor_name: currentPayMethod === 'bank' ? document.getElementById('depositorName').value : null,
+    coupon_id: appliedCoupon ? appliedCoupon.coupons.id : null,
+    discount_amount: couponDiscount,
+    points_used: pointUse,
+    points_earned: pointEarn,
+    shipping_fee: SHIPPING_FEE,
+    total_amount: total,
+  }).select().single();
+
+  if (error) { console.error(error); alert('주문완료는 준비중입니다.'); return; }
+
+  const orderItemRows = orderLines.map((l) => ({
+    order_id: order.id,
+    product_id: l.product.id,
+    product_name: l.product.name,
+    option: l.option,
+    price: l.product.price,
+    quantity: l.quantity,
+  }));
+  await window.supabaseClient.from('order_items').insert(orderItemRows);
+
+  if (pointUse > 0) {
+    await window.supabaseClient.from('points').insert({ user_id: currentUser.id, amount: -pointUse, reason: '주문 사용', order_id: order.id });
+  }
+  if (pointEarn > 0) {
+    await window.supabaseClient.from('points').insert({ user_id: currentUser.id, amount: pointEarn, reason: '주문 적립', order_id: order.id });
+  }
+  if (appliedCoupon && appliedCoupon.id) {
+    await window.supabaseClient.from('user_coupons').update({ is_used: true, used_at: new Date().toISOString() }).eq('id', appliedCoupon.id);
+  }
+
+  const cartIds = orderLines.filter((l) => l.cartId).map((l) => l.cartId);
+  if (cartIds.length) await window.supabaseClient.from('cart_items').delete().in('id', cartIds);
+
+  sessionStorage.removeItem('cozama_buy_now');
+  sessionStorage.removeItem('cozama_checkout_cart_ids');
+
+  alert(`주문이 완료되었습니다. (주문번호 : ${orderNo})`);
+  location.href = 'mypage.html';
+}
+
+async function payAsGuest(receiverName, receiverPhone, receiverAddress) {
+  const guestName = document.getElementById('guestName').value.trim();
+  const guestPhone = document.getElementById('guestPhone').value.trim();
+  const guestPassword = document.getElementById('guestPassword').value;
+  const guestPasswordConfirm = document.getElementById('guestPasswordConfirm').value;
+
+  if (!guestName || !guestPhone || !guestPassword) {
+    alert('주문자 정보를 입력해주세요.');
+    return;
+  }
+  if (guestPassword !== guestPasswordConfirm) {
+    alert('비회원 주문 비밀번호가 일치하지 않습니다.');
+    return;
+  }
+
+  const productAmount = getProductAmount();
+  const total = Math.max(0, productAmount + SHIPPING_FEE);
+  const orderNo = `ORD${Date.now()}`;
+
+  const items = orderLines.map((l) => ({
+    product_id: l.product.id,
+    product_name: l.product.name,
+    option: l.option,
+    price: l.product.price,
+    quantity: l.quantity,
+  }));
+
+  const { error } = await window.supabaseClient.rpc('create_guest_order', {
+    p_order_no: orderNo,
+    p_guest_name: guestName,
+    p_guest_phone: guestPhone,
+    p_guest_password: guestPassword,
+    p_receiver_name: receiverName,
+    p_receiver_phone: receiverPhone,
+    p_address: receiverAddress,
+    p_address_detail: document.getElementById('receiverAddressDetail').value,
+    p_delivery_message: getDeliveryMessage(),
+    p_payment_method: currentPayMethod,
+    p_bank_name: currentPayMethod === 'bank' ? document.getElementById('bankSelect').value : null,
+    p_depositor_name: currentPayMethod === 'bank' ? document.getElementById('depositorName').value : null,
+    p_shipping_fee: SHIPPING_FEE,
+    p_total_amount: total,
+    p_items: items,
+  });
+
+  if (error) { console.error(error); alert('주문완료는 준비중입니다.'); return; }
+
+  const mode = new URLSearchParams(location.search).get('mode');
+  if (mode === 'guestcart') {
+    orderLines.forEach((l) => window.CozamaGuestCart.remove(l.product.id, l.option));
+  }
+  sessionStorage.removeItem('cozama_buy_now');
+  sessionStorage.removeItem('cozama_checkout_guest_lines');
+
+  alert(`주문이 완료되었습니다. (주문번호 : ${orderNo})\n주문조회 시 주문번호와 비밀번호가 필요하니 꼭 기억해주세요.`);
+  location.href = 'login.html';
 }

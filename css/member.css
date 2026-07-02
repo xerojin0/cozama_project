@@ -35,6 +35,8 @@
 .form_hint { font-size: 12px; color: var(--color-sub); margin-top: 6px; }
 .form_error { font-size: 12px; color: var(--color-primary); margin-top: 6px; display: none; }
 .form_error.show { display: block; }
+.form_success { font-size: 12px; color: #2E8B57; margin-top: 6px; display: none; }
+.form_success.show { display: block; }
 .form_addr_row { display: flex; gap: 8px; margin-bottom: 8px; }
 .form_addr_row .form_input { flex: 1; }
 .form_addr_row .btn { flex: 0 0 auto; padding: 0 20px; font-size: 13px; }
@@ -91,6 +93,13 @@
 .simple_table th, .simple_table td { padding: 14px 12px; font-size: 13px; border-bottom: 1px solid var(--color-border); text-align: left; }
 .simple_table th { color: var(--color-sub); font-weight: 600; }
 .simple_table td.ellipsis { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.order_actions_cell { display: flex; gap: 6px; flex-wrap: wrap; }
+.order_action_btn {
+  border: 1px solid var(--color-border); border-radius: 4px;
+  padding: 6px 10px; font-size: 12px; color: var(--color-text);
+  white-space: nowrap;
+}
+.order_action_btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
 .recent_view_grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 .recent_view_grid .rv_card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 8px; }

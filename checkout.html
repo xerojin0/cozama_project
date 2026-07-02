@@ -16,7 +16,7 @@
     <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
     <div class="header_right">
       <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
+      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""><span class="cart_badge"></span></a>
     </div>
   </div>
 </header>
@@ -27,7 +27,7 @@
     <a href="index.html" class="header_logo"><img src="img/logo/logo.svg" alt="COZAMA"></a>
     <div class="gnb_util">
       <button type="button" class="icon_btn" aria-label="검색"><img src="img/icon/search_icon.svg" alt=""></button>
-      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""></a>
+      <a href="cart.html" class="icon_btn" aria-label="장바구니"><img src="img/icon/basket_icon.svg" alt=""><span class="cart_badge"></span></a>
     </div>
   </div>
   <div class="gnb_auth" data-auth="out">
@@ -67,6 +67,16 @@
     <div class="checkout_layout">
       <!-- ================= LEFT 60% ================= -->
       <div class="checkout_left">
+
+        <!-- 1-0 주문자 정보 (비회원 전용) -->
+        <section class="checkout_section" id="guestInfoSection" style="display:none;">
+          <p class="form_section_title" style="margin-top:0;">주문자 정보 (비회원)</p>
+          <div class="form_group"><label>주문자명</label><input type="text" id="guestName" class="form_input" placeholder="주문자명을 입력해주세요" required></div>
+          <div class="form_group"><label>연락처</label><input type="text" id="guestPhone" class="form_input" placeholder="010-1234-5678" required></div>
+          <div class="form_group"><label>비회원 주문 비밀번호</label><input type="password" id="guestPassword" class="form_input" placeholder="주문조회 시 사용할 비밀번호" required></div>
+          <div class="form_group"><label>비밀번호 확인</label><input type="password" id="guestPasswordConfirm" class="form_input" placeholder="비밀번호를 다시 입력해주세요" required></div>
+          <p class="form_hint">입력하신 주문번호와 비밀번호로 로그인 없이 주문내역을 조회할 수 있습니다.</p>
+        </section>
 
         <!-- 1-1 배송지 -->
         <section class="checkout_section">
@@ -108,8 +118,8 @@
           <div id="orderProdList"></div>
         </section>
 
-        <!-- 1-4 할인/부가결제 -->
-        <section class="checkout_section">
+        <!-- 1-4 할인/부가결제 (회원 전용) -->
+        <section class="checkout_section" id="discountSection">
           <p class="form_section_title" style="margin-top:0;">할인 / 부가결제 수단</p>
 
           <div class="coupon_box">
@@ -179,7 +189,7 @@
         <div class="summary_row"><span>적립금 사용</span><span id="summaryPointUse">-0원</span></div>
         <div class="summary_row total"><span>총 결제금액</span><span id="summaryTotal">0원</span></div>
 
-        <p class="point_earn_box">적립 예정 포인트 : <span id="summaryPointEarn">0</span>P</p>
+        <p class="point_earn_box" id="pointEarnBox">적립 예정 포인트 : <span id="summaryPointEarn">0</span>P</p>
 
         <button type="button" class="btn btn_primary checkout_pay_btn" id="payBtn">
           <span id="payBtnAmount">KRW 0</span>&nbsp;결제하기

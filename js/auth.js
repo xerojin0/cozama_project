@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initJoinAgreeAll();
   initJoinStepNav();
   initAddressSearch();
+  initPwMatchCheck();
+  initUserIdCheck();
   initJoinSubmit();
   initFindAccountRadios();
   initFindIdForms();
@@ -36,6 +38,17 @@ function initTabSwitch() {
   }
 }
 
+/* ---------------- 로그인 - 비회원 장바구니 병합 ---------------- */
+async function mergeGuestCartIntoAccount(userId) {
+  if (!window.CozamaGuestCart) return;
+  const guestItems = window.CozamaGuestCart.get();
+  if (!guestItems.length) return;
+
+  const rows = guestItems.map((i) => ({ user_id: userId, product_id: i.product_id, option: i.option, quantity: i.quantity }));
+  await window.supabaseClient.from('cart_items').insert(rows);
+  window.CozamaGuestCart.clear();
+}
+
 /* ---------------- 로그인 ---------------- */
 function initLoginForm() {
   const form = document.getElementById('loginForm');
@@ -53,8 +66,10 @@ function initLoginForm() {
         .rpc('get_email_by_user_id', { p_user_id: userId });
       if (rpcError || !email) throw new Error('아이디를 찾을 수 없습니다.');
 
-      const { error: signInError } = await window.supabaseClient.auth.signInWithPassword({ email, password });
+      const { data: signInData, error: signInError } = await window.supabaseClient.auth.signInWithPassword({ email, password });
       if (signInError) throw signInError;
+
+      await mergeGuestCartIntoAccount(signInData.user.id);
 
       if (document.getElementById('saveId').checked) {
         localStorage.setItem('cozama_saved_id', userId);
@@ -85,10 +100,47 @@ function initLoginForm() {
 function initGuestOrderForm() {
   const form = document.getElementById('guestOrderForm');
   if (!form) return;
-  form.addEventListener('submit', (e) => {
+  const errorEl = document.getElementById('guestOrderError');
+  const resultEl = document.getElementById('guestOrderResult');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    alert('입력하신 정보로 주문내역을 조회했습니다. (데모)');
+    errorEl.classList.remove('show');
+    resultEl.style.display = 'none';
+
+    const guestName = document.getElementById('guestName').value.trim();
+    const orderNo = document.getElementById('guestOrderNo').value.trim();
+    const guestPassword = document.getElementById('guestOrderPw').value;
+
+    const { data, error } = await window.supabaseClient.rpc('get_guest_order', {
+      p_order_no: orderNo,
+      p_guest_name: guestName,
+      p_guest_password: guestPassword,
+    });
+
+    if (error || !data) {
+      errorEl.classList.add('show');
+      return;
+    }
+
+    renderGuestOrderResult(data);
   });
+}
+
+function renderGuestOrderResult(data) {
+  const order = data.order;
+  const items = data.items || [];
+  const tbody = document.getElementById('guestOrderResultBody');
+  tbody.innerHTML = `
+    <tr>
+      <td>${order.order_no}</td>
+      <td class="ellipsis">${items.map((i) => i.product_name).join(', ')}</td>
+      <td>${Number(order.total_amount).toLocaleString()}원</td>
+      <td>${order.status}</td>
+      <td>${order.created_at ? order.created_at.slice(0, 10) : ''}</td>
+    </tr>
+  `;
+  document.getElementById('guestOrderResult').style.display = 'block';
 }
 
 /* ---------------- 회원가입 - 전체동의 ---------------- */
@@ -148,6 +200,74 @@ function initAddressSearch() {
   });
 }
 
+/* ---------------- 회원가입 - 비밀번호 확인 실시간 검증 ---------------- */
+function initPwMatchCheck() {
+  const pw = document.getElementById('joinPw');
+  const pwConfirm = document.getElementById('joinPwConfirm');
+  if (!pw || !pwConfirm) return;
+
+  const mismatchEl = document.getElementById('pwMismatchError');
+  const successEl = document.getElementById('pwMatchSuccess');
+
+  const check = () => {
+    if (!pwConfirm.value) {
+      mismatchEl.classList.remove('show');
+      successEl.classList.remove('show');
+      return;
+    }
+    const isMatch = pw.value === pwConfirm.value;
+    mismatchEl.classList.toggle('show', !isMatch);
+    successEl.classList.toggle('show', isMatch);
+  };
+
+  pw.addEventListener('input', check);
+  pwConfirm.addEventListener('input', check);
+}
+
+/* ---------------- 회원가입 - 아이디 중복확인 ---------------- */
+function initUserIdCheck() {
+  const input = document.getElementById('joinUserId');
+  const btn = document.getElementById('userIdCheckBtn');
+  if (!input || !btn) return;
+
+  const dupError = document.getElementById('userIdDupError');
+  const success = document.getElementById('userIdAvailableSuccess');
+
+  const resetStatus = () => {
+    input.dataset.checkedValue = '';
+    dupError.classList.remove('show');
+    success.classList.remove('show');
+  };
+  input.addEventListener('input', resetStatus);
+
+  btn.addEventListener('click', async () => {
+    const userId = input.value.trim();
+    dupError.classList.remove('show');
+    success.classList.remove('show');
+
+    if (!input.checkValidity()) {
+      dupError.textContent = '아이디 형식(영문 소문자 + 숫자, 4~16자)을 확인해주세요.';
+      dupError.classList.add('show');
+      return;
+    }
+
+    const { data: available, error } = await window.supabaseClient.rpc('is_user_id_available', { p_user_id: userId });
+    if (error) {
+      dupError.textContent = '중복확인 중 오류가 발생했습니다. 다시 시도해주세요.';
+      dupError.classList.add('show');
+      return;
+    }
+
+    if (available) {
+      input.dataset.checkedValue = userId;
+      success.classList.add('show');
+    } else {
+      input.dataset.checkedValue = '';
+      dupError.classList.add('show');
+    }
+  });
+}
+
 /* ---------------- 회원가입 제출 ---------------- */
 function initJoinSubmit() {
   const form = document.getElementById('joinForm');
@@ -167,7 +287,12 @@ function initJoinSubmit() {
     }
     pwMismatch.classList.remove('show');
 
-    const userId = document.getElementById('joinUserId').value.trim();
+    const userIdInput = document.getElementById('joinUserId');
+    const userId = userIdInput.value.trim();
+    if (userIdInput.dataset.checkedValue !== userId) {
+      errorEl.textContent = '아이디 중복확인을 먼저 진행해주세요.';
+      return;
+    }
     const name = document.getElementById('joinName').value.trim();
     const email = document.getElementById('joinEmail').value.trim();
     const phone = [
@@ -192,27 +317,31 @@ function initJoinSubmit() {
     const birthType = (document.querySelector('input[name="birthType"]:checked') || {}).value || 'solar';
     const region = document.getElementById('joinRegion').value || null;
 
+    const profileFields = {
+      user_id: userId,
+      name,
+      phone,
+      phone2,
+      zipcode,
+      address,
+      address_detail: addressDetail,
+      gender,
+      birth_date: birthDate,
+      birth_type: birthType,
+      region,
+    };
+
     try {
       const { data: signUpData, error: signUpError } = await window.supabaseClient.auth.signUp({ email, password: pw });
       if (signUpError) throw signUpError;
 
       const userIdAuth = signUpData.user && signUpData.user.id;
-      if (userIdAuth) {
-        const { error: profileError } = await window.supabaseClient.from('profiles').update({
-          user_id: userId,
-          name,
-          phone,
-          phone2,
-          zipcode,
-          address,
-          address_detail: addressDetail,
-          gender,
-          birth_date: birthDate,
-          birth_type: birthType,
-          region,
-        }).eq('id', userIdAuth);
-        if (profileError) throw profileError;
+      if (!userIdAuth || !signUpData.session) {
+        throw new Error('회원가입 세션 생성에 실패했습니다. Supabase 프로젝트의 이메일 인증(Confirm email) 설정을 꺼주세요.');
       }
+
+      const { error: profileError } = await window.supabaseClient.from('profiles').update(profileFields).eq('id', userIdAuth);
+      if (profileError) throw profileError;
 
       document.getElementById('completeName').textContent = name;
       document.getElementById('completeDate').textContent = new Date().toISOString().slice(0, 10);

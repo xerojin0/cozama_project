@@ -3,12 +3,17 @@
 =================================================================== */
 
 let cartItemsCache = [];
+let isGuest = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await window.supabaseClient.auth.getSession();
-  if (!data.session) { location.href = 'login.html'; return; }
-  await loadCart(data.session.user.id);
-  bindBottomActions(data.session.user.id);
+  if (data.session) {
+    await loadCart(data.session.user.id);
+  } else {
+    isGuest = true;
+    await loadGuestCart();
+  }
+  bindBottomActions();
 });
 
 async function loadCart(userId) {
@@ -19,6 +24,30 @@ async function loadCart(userId) {
     .order('created_at', { ascending: false });
 
   cartItemsCache = items || [];
+  renderCartList();
+}
+
+async function loadGuestCart() {
+  const guestItems = window.CozamaGuestCart.get();
+  const productIds = [...new Set(guestItems.map((i) => i.product_id))];
+
+  let productsById = {};
+  if (productIds.length) {
+    const { data: products } = await window.supabaseClient.from('products').select('*').in('id', productIds);
+    (products || []).forEach((p) => { productsById[p.id] = p; });
+  }
+
+  cartItemsCache = guestItems.map((i) => ({
+    id: `${i.product_id}::${i.option}`,
+    product_id: i.product_id,
+    option: i.option,
+    quantity: i.quantity,
+    products: productsById[i.product_id] || null,
+  }));
+  renderCartList();
+}
+
+function renderCartList() {
   const listEl = document.getElementById('cartList');
   const emptyEl = document.getElementById('cartEmpty');
   const wrapEl = document.getElementById('cartWrap');
@@ -84,19 +113,38 @@ async function updateQty(cartId, delta) {
   const item = cartItemsCache.find((i) => i.id === cartId);
   if (!item) return;
   const newQty = Math.max(1, item.quantity + delta);
+
+  if (isGuest) {
+    window.CozamaGuestCart.updateQty(item.product_id, item.option, newQty);
+    loadGuestCart();
+    window.CozamaCart.refreshBadge();
+    return;
+  }
   await window.supabaseClient.from('cart_items').update({ quantity: newQty }).eq('id', cartId);
   const { data } = await window.supabaseClient.auth.getSession();
   loadCart(data.session.user.id);
+  window.CozamaCart.refreshBadge();
 }
 
 async function deleteItems(ids) {
   if (!ids.length) return;
+
+  if (isGuest) {
+    ids.forEach((id) => {
+      const item = cartItemsCache.find((i) => i.id === id);
+      if (item) window.CozamaGuestCart.remove(item.product_id, item.option);
+    });
+    loadGuestCart();
+    window.CozamaCart.refreshBadge();
+    return;
+  }
   await window.supabaseClient.from('cart_items').delete().in('id', ids);
   const { data } = await window.supabaseClient.auth.getSession();
   loadCart(data.session.user.id);
+  window.CozamaCart.refreshBadge();
 }
 
-function bindBottomActions(userId) {
+function bindBottomActions() {
   document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
     const ids = getSelectedIds();
     if (!ids.length) return alert('삭제할 상품을 선택해주세요.');
@@ -111,10 +159,13 @@ function bindBottomActions(userId) {
   document.getElementById('orderSelectedBtn').addEventListener('click', () => {
     const ids = getSelectedIds();
     if (!ids.length) return alert('주문할 상품을 선택해주세요.');
+    if (isGuest) return goToGuestCheckout(ids);
     goToCheckout(ids);
   });
 
   document.getElementById('orderAllBtn').addEventListener('click', () => {
+    if (!cartItemsCache.length) return;
+    if (isGuest) return goToGuestCheckout(cartItemsCache.map((i) => i.id));
     goToCheckout(cartItemsCache.map((i) => i.id));
   });
 }
@@ -128,4 +179,14 @@ function getSelectedIds() {
 function goToCheckout(ids) {
   sessionStorage.setItem('cozama_checkout_cart_ids', JSON.stringify(ids));
   location.href = 'checkout.html?mode=cart';
+}
+
+function goToGuestCheckout(ids) {
+  const lines = ids
+    .map((id) => cartItemsCache.find((i) => i.id === id))
+    .filter((i) => i && i.products)
+    .map((i) => ({ product_id: i.product_id, option: i.option, quantity: i.quantity }));
+  if (!lines.length) return alert('주문할 상품을 선택해주세요.');
+  sessionStorage.setItem('cozama_checkout_guest_lines', JSON.stringify(lines));
+  location.href = 'checkout.html?mode=guestcart';
 }

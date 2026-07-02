@@ -56,7 +56,7 @@ function renderGallery(p) {
   if (!window.Swiper) return;
   const thumbSwiper = new Swiper('.swiper-detail-thumbs', {
     slidesPerView: 'auto',
-    spaceBetween: 12,
+    spaceBetween: 20,
     watchSlidesProgress: true,
   });
   new Swiper('.swiper-detail-main', {
@@ -152,12 +152,20 @@ function updateTotalAmount(p) {
 
 function initActions(p) {
   const wishBtn = document.getElementById('detailWishBtn');
+
+  window.CozamaWishlist.getLikedIds([p.id]).then((likedIds) => {
+    if (likedIds.has(p.id)) {
+      wishBtn.classList.add('active');
+      wishBtn.textContent = '♥ 좋아요';
+    }
+  });
+
   wishBtn.addEventListener('click', async () => {
-    const { data } = await window.supabaseClient.auth.getSession();
-    if (!data.session) { location.href = 'login.html'; return; }
-    await window.supabaseClient.from('wishlist').insert({ user_id: data.session.user.id, product_id: p.id });
-    wishBtn.classList.toggle('active');
-    wishBtn.textContent = wishBtn.classList.contains('active') ? '♥ 좋아요' : '♡ 좋아요';
+    const isActive = wishBtn.classList.contains('active');
+    const result = await window.CozamaWishlist.toggle(p.id, isActive);
+    if (result === null) return;
+    wishBtn.classList.toggle('active', result);
+    wishBtn.textContent = result ? '♥ 좋아요' : '♡ 좋아요';
   });
 
   document.getElementById('detailShareBtn').addEventListener('click', () => {
@@ -165,17 +173,21 @@ function initActions(p) {
   });
 
   document.getElementById('addCartBtn').addEventListener('click', async () => {
-    const { data } = await window.supabaseClient.auth.getSession();
-    if (!data.session) { location.href = 'login.html'; return; }
     if (!cartLines.length) { alert('옵션을 선택해주세요.'); return; }
+    const { data } = await window.supabaseClient.auth.getSession();
+    if (!data.session) {
+      cartLines.forEach((l) => window.CozamaGuestCart.add(p.id, l.option, l.qty));
+      window.CozamaCart.refreshBadge();
+      alert('장바구니에 담았습니다.');
+      return;
+    }
     const rows = cartLines.map((l) => ({ user_id: data.session.user.id, product_id: p.id, option: l.option, quantity: l.qty }));
     await window.supabaseClient.from('cart_items').insert(rows);
+    window.CozamaCart.refreshBadge();
     alert('장바구니에 담았습니다.');
   });
 
-  document.getElementById('buyNowBtn').addEventListener('click', async () => {
-    const { data } = await window.supabaseClient.auth.getSession();
-    if (!data.session) { location.href = 'login.html'; return; }
+  document.getElementById('buyNowBtn').addEventListener('click', () => {
     if (!cartLines.length) { alert('옵션을 선택해주세요.'); return; }
     sessionStorage.setItem('cozama_buy_now', JSON.stringify({ product: p, lines: cartLines }));
     location.href = 'checkout.html?mode=buynow';

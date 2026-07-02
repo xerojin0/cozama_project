@@ -44,11 +44,33 @@ function initNewArrivalSwiper() {
   });
 }
 
-function initLikeButtons() {
-  document.querySelectorAll('.like_btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('active');
-      btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+async function initLikeButtons() {
+  const btns = [...document.querySelectorAll('.like_btn[data-code]')];
+  if (!btns.length || !window.supabaseClient) return;
+
+  const codes = btns.map((btn) => btn.dataset.code);
+  const { data: products } = await window.supabaseClient
+    .from('products').select('id, product_code').in('product_code', codes);
+  const idByCode = {};
+  (products || []).forEach((p) => { idByCode[p.product_code] = p.id; });
+
+  const likedIds = await window.CozamaWishlist.getLikedIds(Object.values(idByCode));
+
+  btns.forEach((btn) => {
+    const productId = idByCode[btn.dataset.code];
+    if (!productId) return;
+
+    if (likedIds.has(productId)) {
+      btn.classList.add('active');
+      btn.textContent = '♥';
+    }
+
+    btn.addEventListener('click', async () => {
+      const isActive = btn.classList.contains('active');
+      const result = await window.CozamaWishlist.toggle(productId, isActive);
+      if (result === null) return;
+      btn.classList.toggle('active', result);
+      btn.textContent = result ? '♥' : '♡';
     });
   });
 }

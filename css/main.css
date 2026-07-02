@@ -3,7 +3,7 @@
 =================================================================== */
 
 /* ---------------- 1. Main Visual Hero ---------------- */
-.main_visual { position: relative; width: 100%; }
+.main_visual { position: relative; width: 100%; overflow: hidden; }
 .main_visual .swiper_container { width: 100%; height: 100vh; max-height: 900px; min-height: 560px; }
 .main_visual .swiper-slide { position: relative; overflow: hidden; }
 .main_visual .slide_bg {
@@ -63,6 +63,7 @@
   z-index: 3; width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
   background: var(--color-white); border: 1px solid var(--color-border);
+  cursor: pointer;
 }
 .new_arrival .swiper_prev { left: -20px; }
 .new_arrival .swiper_next { right: -20px; }

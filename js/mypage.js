@@ -61,6 +61,16 @@ function initProfileForm(user) {
 
 const STATUS_KEYS = { '입금전': '입금전', '배송준비중': '배송준비중', '배송중': '배송중', '배송완료': '배송완료' };
 
+// 상태별로 허용되는 관리 액션. label: 버튼 표시 문구, next: 변경될 status, confirm: 확인 문구
+const ORDER_ACTIONS = {
+  '입금전': [{ label: '주문취소', next: '취소', confirm: '주문을 취소하시겠습니까?' }],
+  '배송준비중': [{ label: '주문취소', next: '취소', confirm: '주문을 취소하시겠습니까?' }],
+  '배송완료': [
+    { label: '교환신청', next: '교환', confirm: '교환을 신청하시겠습니까?' },
+    { label: '반품신청', next: '반품', confirm: '반품을 신청하시겠습니까?' },
+  ],
+};
+
 async function loadOrders(user) {
   const { data: orders } = await window.supabaseClient
     .from('orders').select('*, order_items(*)').eq('user_id', user.id).order('created_at', { ascending: false });
@@ -77,18 +87,35 @@ async function loadOrders(user) {
 
   const tbody = document.getElementById('orderTableBody');
   if (!orders || !orders.length) {
-    tbody.innerHTML = '<tr><td colspan="5">주문 내역이 없습니다.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6">주문 내역이 없습니다.</td></tr>';
     return;
   }
-  tbody.innerHTML = orders.map((o) => `
+  tbody.innerHTML = orders.map((o) => {
+    const actions = ORDER_ACTIONS[o.status] || [];
+    const actionsHtml = actions.length
+      ? actions.map((a) => `<button type="button" class="order_action_btn" data-order-id="${o.id}" data-next-status="${a.next}" data-confirm="${a.confirm}">${a.label}</button>`).join('')
+      : '-';
+    return `
     <tr>
       <td>${o.order_no}</td>
       <td class="ellipsis">${(o.order_items || []).map((i) => i.product_name).join(', ')}</td>
       <td>${Number(o.total_amount).toLocaleString()}원</td>
       <td>${o.status}</td>
       <td>${o.created_at ? o.created_at.slice(0, 10) : ''}</td>
+      <td class="order_actions_cell">${actionsHtml}</td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
+
+  tbody.querySelectorAll('.order_action_btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (!confirm(btn.dataset.confirm)) return;
+      const { error } = await window.supabaseClient
+        .from('orders').update({ status: btn.dataset.nextStatus }).eq('id', btn.dataset.orderId);
+      if (error) { alert('처리 중 오류가 발생했습니다.'); return; }
+      await loadOrders(user);
+    });
+  });
 }
 
 async function loadPoints(user) {
