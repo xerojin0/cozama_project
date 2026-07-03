@@ -15,6 +15,10 @@ function initHeroSwiper() {
     effect: 'fade',
     fadeEffect: { crossFade: true },
     loop: true,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+    },
     pagination: {
       el: '.hero_pagination',
       type: 'fraction',
