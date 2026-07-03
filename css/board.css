@@ -18,6 +18,24 @@
 .board_detail_body { font-size: 14px; line-height: 1.8; color: var(--color-body); min-height: 200px; white-space: pre-line; }
 .board_back_btn { display: inline-block; margin-top: 40px; }
 
+/* ---- 게시판 제목 + 글쓰기 버튼 ---- */
+.board_page_head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.board_page_head .page_title { margin-bottom: 0; text-align: left; }
+
+/* ---- Review 작성/수정 폼 ---- */
+.review_product_card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px; margin-bottom: 18px;
+  border: 1px solid var(--color-border); background: var(--color-bg);
+}
+.review_product_card img { width: 64px; height: 64px; object-fit: cover; flex: none; }
+.review_product_card .prod_name { font-size: 14px; margin-bottom: 4px; }
+.review_product_card .prod_option { font-size: 12px; color: var(--color-sub); }
+
+.star_rating_input { display: flex; gap: 6px; }
+.star_rating_input .star_btn { font-size: 32px; line-height: 1; color: var(--color-border); }
+.star_rating_input .star_btn.active { color: var(--color-primary); }
+
 /* ---- Review grid (전체 리뷰 모아보기) ---- */
 .review_grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 .review_grid .review_card .thumb_wrap { aspect-ratio: 1/1; overflow: hidden; margin-bottom: 12px; }

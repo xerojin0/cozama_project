@@ -197,18 +197,47 @@ function renderProductCard(p) {
 }
 
 async function loadMyPosts(user) {
-  const { data: reviews } = await window.supabaseClient
-    .from('reviews').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+  const [{ data: reviews }, { data: inquiries }] = await Promise.all([
+    window.supabaseClient.from('reviews').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+    window.supabaseClient.from('inquiries').select('*, products(product_code)').eq('user_id', user.id).order('created_at', { ascending: false }),
+  ]);
+
+  const posts = [
+    ...(reviews || []).map((r) => ({ type: 'review', id: r.id, title: r.title || r.content, created_at: r.created_at })),
+    ...(inquiries || []).map((q) => ({ type: 'inquiry', id: q.id, title: q.title, created_at: q.created_at, status: q.status })),
+  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   const tbody = document.getElementById('myPostsTableBody');
-  if (!reviews || !reviews.length) {
-    tbody.innerHTML = '<tr><td colspan="2">작성하신 글이 없습니다.</td></tr>';
+  if (!posts.length) {
+    tbody.innerHTML = '<tr><td colspan="4">작성하신 글이 없습니다.</td></tr>';
     return;
   }
-  tbody.innerHTML = reviews.map((r) => `
+
+  tbody.innerHTML = posts.map((p) => {
+    const typeLabel = p.type === 'review' ? '리뷰' : '문의';
+    const link = p.type === 'review' ? `review-write.html?id=${p.id}` : `inquiry-write.html?id=${p.id}`;
+    return `
     <tr>
-      <td class="ellipsis">${r.title || r.content}</td>
-      <td>${r.created_at ? r.created_at.slice(0, 10) : ''}</td>
-    </tr>
-  `).join('');
+      <td>${typeLabel}</td>
+      <td class="ellipsis"><a href="${link}">${p.title}</a></td>
+      <td>${p.created_at ? p.created_at.slice(0, 10) : ''}</td>
+      <td><button type="button" class="order_action_btn myposts_delete_btn" data-id="${p.id}" data-type="${p.type}" data-status="${p.status || ''}">삭제</button></td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('.myposts_delete_btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const isReview = btn.dataset.type === 'review';
+      if (!isReview && btn.dataset.status === '답변완료') {
+        alert('이미 답변이 완료된 문의는 삭제할 수 없습니다.');
+        return;
+      }
+      const table = isReview ? 'reviews' : 'inquiries';
+      const label = isReview ? '리뷰' : '문의글';
+      if (!confirm(`${label}을(를) 삭제하시겠습니까?`)) return;
+      const { error } = await window.supabaseClient.from(table).delete().eq('id', btn.dataset.id);
+      if (error) { alert('삭제 중 오류가 발생했습니다.'); return; }
+      await loadMyPosts(user);
+    });
+  });
 }

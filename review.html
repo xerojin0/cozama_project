@@ -62,7 +62,10 @@
 
 <main class="board_page">
   <div class="inner">
-    <h1 class="page_title">REVIEW</h1>
+    <div class="board_page_head">
+      <h1 class="page_title">REVIEW</h1>
+      <a href="review-write.html" class="btn btn_primary">리뷰 쓰기</a>
+    </div>
     <div class="review_grid" id="reviewGrid"></div>
     <p class="body_text" id="reviewEmptyState" style="display:none; text-align:center; padding: 80px 0;">등록된 리뷰가 없습니다.</p>
     <nav class="pagination" id="pagination"></nav>
@@ -103,6 +106,19 @@
     </article>
   </div>
 </footer>
+
+<!-- ================= QUICK MENU ================= -->
+<div class="quick_menu">
+  <button type="button" class="quick_btn quick_cs" aria-label="고객상담">
+    <img src="img/icon/quick_icon.png" alt="고객상담" />
+  </button>
+  <button type="button" class="quick_btn quick_top" aria-label="위로 이동">
+    <span class="quick_arrow quick_arrow_up"></span>
+  </button>
+  <button type="button" class="quick_btn quick_bottom" aria-label="아래로 이동">
+    <span class="quick_arrow quick_arrow_down"></span>
+  </button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-client.js"></script>

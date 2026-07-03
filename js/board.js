@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadNoticeDetail();
   loadReviewGrid();
   initInquiryForm();
+  initReviewForm();
 });
 
 /* ---------------- NOTICE 목록 ---------------- */
@@ -69,11 +70,67 @@ async function loadReviewGrid() {
   `).join('');
 }
 
-/* ---------------- 상품문의 작성 ---------------- */
-function initInquiryForm() {
+/* ---------------- 상품문의 작성 / 수정 ---------------- */
+async function initInquiryForm() {
   const form = document.getElementById('inquiryForm');
   if (!form) return;
 
+  const inquiryId = new URLSearchParams(location.search).get('id');
+  const titleEl = document.getElementById('inquiryFormTitle');
+  const titleInput = document.getElementById('inquiryTitle');
+  const contentInput = document.getElementById('inquiryContent');
+  const secretInput = document.getElementById('inquirySecret');
+  const submitBtn = document.getElementById('inquirySubmitBtn');
+  const deleteBtn = document.getElementById('inquiryDeleteBtn');
+
+  if (inquiryId) {
+    /* ---- 수정 모드 ---- */
+    const { data } = await window.supabaseClient.auth.getSession();
+    if (!data.session) { location.href = 'login.html'; return; }
+    const user = data.session.user;
+
+    const { data: inquiry } = await window.supabaseClient.from('inquiries').select('*').eq('id', inquiryId).single();
+    if (!inquiry || inquiry.user_id !== user.id) {
+      alert('문의글을 찾을 수 없습니다.');
+      location.href = 'mypage.html';
+      return;
+    }
+    if (inquiry.status === '답변완료') {
+      alert('이미 답변이 완료된 문의는 수정/삭제할 수 없습니다.');
+      location.href = 'mypage.html';
+      return;
+    }
+
+    titleEl.textContent = '상품문의 수정';
+    titleInput.value = inquiry.title;
+    contentInput.value = inquiry.content;
+    secretInput.checked = inquiry.is_secret;
+    submitBtn.textContent = '문의 수정하기';
+    deleteBtn.style.display = 'inline-flex';
+
+    deleteBtn.addEventListener('click', async () => {
+      if (!confirm('문의글을 삭제하시겠습니까?')) return;
+      const { error } = await window.supabaseClient.from('inquiries').delete().eq('id', inquiryId);
+      if (error) { alert('삭제 중 오류가 발생했습니다.'); return; }
+      alert('문의글이 삭제되었습니다.');
+      location.href = 'mypage.html';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { error } = await window.supabaseClient.from('inquiries').update({
+        title: titleInput.value,
+        content: contentInput.value,
+        is_secret: secretInput.checked,
+      }).eq('id', inquiryId);
+      if (error) { alert('문의 수정 중 오류가 발생했습니다.'); return; }
+      alert('문의글이 수정되었습니다.');
+      location.href = 'mypage.html';
+    });
+    return;
+  }
+
+  /* ---- 작성 모드 ---- */
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const { data } = await window.supabaseClient.auth.getSession();
@@ -83,14 +140,155 @@ function initInquiryForm() {
     const { error } = await window.supabaseClient.from('inquiries').insert({
       product_id: productId,
       user_id: data.session.user.id,
-      title: document.getElementById('inquiryTitle').value,
-      content: document.getElementById('inquiryContent').value,
-      is_secret: document.getElementById('inquirySecret').checked,
+      title: titleInput.value,
+      content: contentInput.value,
+      is_secret: secretInput.checked,
       status: '답변대기',
     });
 
     if (error) { alert('문의 등록 중 오류가 발생했습니다.'); return; }
     alert('문의가 등록되었습니다.');
     history.back();
+  });
+}
+
+/* ---------------- REVIEW 작성 / 수정 (review-write.html) ---------------- */
+async function initReviewForm() {
+  const form = document.getElementById('reviewForm');
+  if (!form) return;
+
+  const { data } = await window.supabaseClient.auth.getSession();
+  if (!data.session) { location.href = 'login.html'; return; }
+  const user = data.session.user;
+
+  const reviewId = new URLSearchParams(location.search).get('id');
+
+  const titleEl = document.getElementById('reviewFormTitle');
+  const productSelect = document.getElementById('reviewProductSelect');
+  const productPickWrap = document.getElementById('productPickWrap');
+  const productPickEmpty = document.getElementById('productPickEmpty');
+  const productCard = document.getElementById('reviewProductCard');
+  const productThumb = document.getElementById('reviewProductThumb');
+  const productName = document.getElementById('reviewProductName');
+  const productOption = document.getElementById('reviewProductOption');
+  const ratingInput = document.getElementById('starRatingInput');
+  const titleInput = document.getElementById('reviewTitle');
+  const contentInput = document.getElementById('reviewContent');
+  const submitBtn = document.getElementById('reviewSubmitBtn');
+  const deleteBtn = document.getElementById('reviewDeleteBtn');
+
+  let currentRating = 0;
+  const setRating = (value) => {
+    currentRating = value;
+    ratingInput.querySelectorAll('.star_btn').forEach((btn) => {
+      btn.classList.toggle('active', Number(btn.dataset.value) <= value);
+    });
+  };
+  ratingInput.querySelectorAll('.star_btn').forEach((btn) => {
+    btn.addEventListener('click', () => setRating(Number(btn.dataset.value)));
+  });
+
+  const showProductCard = (thumb, name, option) => {
+    productThumb.src = thumb || '';
+    productName.textContent = name || '';
+    productOption.textContent = option ? `옵션 : ${option}` : '';
+    productCard.style.display = 'flex';
+  };
+
+  if (reviewId) {
+    /* ---- 수정 모드 ---- */
+    const { data: review } = await window.supabaseClient
+      .from('reviews').select('*, products(name, thumbnail_main), order_items(option)')
+      .eq('id', reviewId).single();
+
+    if (!review || review.user_id !== user.id) {
+      alert('리뷰를 찾을 수 없습니다.');
+      location.href = 'mypage.html';
+      return;
+    }
+
+    titleEl.textContent = '리뷰 수정';
+    productPickWrap.style.display = 'none';
+    showProductCard(review.products && review.products.thumbnail_main, review.products && review.products.name, review.order_items && review.order_items.option);
+    setRating(review.rating);
+    titleInput.value = review.title || '';
+    contentInput.value = review.content;
+    submitBtn.textContent = '리뷰 수정하기';
+    deleteBtn.style.display = 'inline-flex';
+
+    deleteBtn.addEventListener('click', async () => {
+      if (!confirm('리뷰를 삭제하시겠습니까?')) return;
+      const { error } = await window.supabaseClient.from('reviews').delete().eq('id', reviewId);
+      if (error) { alert('삭제 중 오류가 발생했습니다.'); return; }
+      alert('리뷰가 삭제되었습니다.');
+      location.href = 'mypage.html';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentRating) { alert('평점을 선택해주세요.'); return; }
+      const { error } = await window.supabaseClient.from('reviews').update({
+        rating: currentRating,
+        title: titleInput.value || null,
+        content: contentInput.value,
+      }).eq('id', reviewId);
+      if (error) { alert('리뷰 수정 중 오류가 발생했습니다.'); return; }
+      alert('리뷰가 수정되었습니다.');
+      location.href = 'mypage.html';
+    });
+    return;
+  }
+
+  /* ---- 작성 모드 : 배송완료 상품 중 리뷰 미작성 건 ---- */
+  const [{ data: orders }, { data: myReviews }] = await Promise.all([
+    window.supabaseClient
+      .from('orders')
+      .select('order_no, status, order_items(id, product_id, product_name, option, products(name, thumbnail_main))')
+      .eq('user_id', user.id).eq('status', '배송완료'),
+    window.supabaseClient.from('reviews').select('order_item_id').eq('user_id', user.id),
+  ]);
+
+  const reviewedItemIds = new Set((myReviews || []).map((r) => r.order_item_id).filter(Boolean));
+  const itemMap = {};
+  const options = [];
+  (orders || []).forEach((o) => {
+    (o.order_items || []).forEach((item) => {
+      if (!item.product_id || reviewedItemIds.has(item.id)) return;
+      itemMap[item.id] = item;
+      options.push(`<option value="${item.id}">[${o.order_no}] ${item.product_name}${item.option ? ' (' + item.option + ')' : ''}</option>`);
+    });
+  });
+
+  if (!options.length) {
+    productSelect.style.display = 'none';
+    productPickEmpty.style.display = 'block';
+    submitBtn.disabled = true;
+    return;
+  }
+
+  productSelect.innerHTML = '<option value="">상품을 선택해주세요</option>' + options.join('');
+  productSelect.addEventListener('change', () => {
+    const item = itemMap[productSelect.value];
+    if (!item) { productCard.style.display = 'none'; return; }
+    showProductCard(item.products && item.products.thumbnail_main, item.products && item.products.name, item.option);
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const item = itemMap[productSelect.value];
+    if (!item) { alert('리뷰를 작성할 상품을 선택해주세요.'); return; }
+    if (!currentRating) { alert('평점을 선택해주세요.'); return; }
+
+    const { error } = await window.supabaseClient.from('reviews').insert({
+      product_id: item.product_id,
+      user_id: user.id,
+      order_item_id: item.id,
+      rating: currentRating,
+      title: titleInput.value || null,
+      content: contentInput.value,
+    });
+    if (error) { alert('리뷰 등록 중 오류가 발생했습니다.'); return; }
+    alert('리뷰가 등록되었습니다.');
+    location.href = 'review.html';
   });
 }

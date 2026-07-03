@@ -78,20 +78,20 @@
 
       <div class="detail_info">
         <p class="info_label" id="detailCategory">HOMEWEAR</p>
-        <h1 class="prod_title" id="detailName">상품명</h1>
+        <div class="detail_title_row">
+          <h1 class="prod_title" id="detailName">상품명</h1>
+          <div class="detail_util_row">
+            <button type="button" class="icon_util_btn wish_btn" id="detailWishBtn" aria-label="좋아요">♡</button>
+            <button type="button" class="icon_util_btn" id="detailShareBtn" aria-label="링크 공유"><img src="img/icon/share_icon.svg" alt=""></button>
+          </div>
+        </div>
         <p class="prod_price" id="detailPrice">0원</p>
         <p class="body_text detail_desc" id="detailDesc">상품 설명이 여기에 표시됩니다.</p>
-
-        <div class="detail_util_row">
-          <button type="button" class="wish_btn" id="detailWishBtn">♡ 좋아요</button>
-          <button type="button" id="detailShareBtn">🔗 링크 공유</button>
-        </div>
 
         <div class="detail_shipping_badge">국내배송</div>
 
         <div class="detail_option">
-          <label for="optionSelect">옵션 선택</label>
-          <select id="optionSelect" class="form_select" style="width:100%;">
+          <select id="optionSelect" class="option_select">
             <option value="">옵션을 선택해주세요</option>
             <option value="FREE">FREE (기본옵션)</option>
           </select>
@@ -99,13 +99,13 @@
         </div>
 
         <div class="detail_price_total">
-          <span class="label">총 상품금액</span>
-          <span class="amount" id="totalAmount">0원</span>
+          <span class="label">TOTAL</span>
+          <span class="amount"><span id="totalAmount">0원</span><span class="qty_count" id="totalQtyCount"></span></span>
         </div>
 
         <div class="detail_action_row">
-          <button type="button" class="btn btn_outline_dark" id="addCartBtn">장바구니 담기</button>
-          <button type="button" class="btn btn_primary" id="buyNowBtn">구매하기</button>
+          <button type="button" class="icon_action_btn" id="addCartBtn" aria-label="장바구니 담기"><img src="img/icon/basket_icon.svg" alt=""></button>
+          <button type="button" class="btn btn_primary btn_buy_now" id="buyNowBtn">구매하기</button>
         </div>
       </div>
     </div>
@@ -229,6 +229,19 @@
     </article>
   </div>
 </footer>
+
+<!-- ================= QUICK MENU ================= -->
+<div class="quick_menu">
+  <button type="button" class="quick_btn quick_cs" aria-label="고객상담">
+    <img src="img/icon/quick_icon.png" alt="고객상담" />
+  </button>
+  <button type="button" class="quick_btn quick_top" aria-label="위로 이동">
+    <span class="quick_arrow quick_arrow_up"></span>
+  </button>
+  <button type="button" class="quick_btn quick_bottom" aria-label="아래로 이동">
+    <span class="quick_arrow quick_arrow_down"></span>
+  </button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-client.js"></script>

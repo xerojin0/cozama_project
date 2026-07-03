@@ -145,9 +145,9 @@
 
         <!-- 내가 쓴 글 -->
         <section class="mypage_panel" data-panel="myposts">
-          <h3 class="form_section_title">내가 쓴 글 (리뷰)</h3>
+          <h3 class="form_section_title">내가 쓴 글 (리뷰 · 문의)</h3>
           <table class="simple_table">
-            <thead><tr><th>제목</th><th>작성일</th></tr></thead>
+            <thead><tr><th class="type_th">구분</th><th>제목</th><th>작성일</th><th>관리</th></tr></thead>
             <tbody id="myPostsTableBody"></tbody>
           </table>
         </section>
@@ -191,6 +191,19 @@
     </article>
   </div>
 </footer>
+
+<!-- ================= QUICK MENU ================= -->
+<div class="quick_menu">
+  <button type="button" class="quick_btn quick_cs" aria-label="고객상담">
+    <img src="img/icon/quick_icon.png" alt="고객상담" />
+  </button>
+  <button type="button" class="quick_btn quick_top" aria-label="위로 이동">
+    <span class="quick_arrow quick_arrow_up"></span>
+  </button>
+  <button type="button" class="quick_btn quick_bottom" aria-label="아래로 이동">
+    <span class="quick_arrow quick_arrow_down"></span>
+  </button>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-client.js"></script>

@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>상품문의 작성 | COZAMA</title>
+<title>리뷰 작성 | COZAMA</title>
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/member.css">
+<link rel="stylesheet" href="css/board.css">
 </head>
 <body>
 
@@ -61,18 +62,42 @@
 
 <main class="form_page">
   <div class="inner">
-    <h1 class="page_title" id="inquiryFormTitle">상품문의 작성</h1>
+    <h1 class="page_title" id="reviewFormTitle">리뷰 작성</h1>
     <div class="form_wrap">
-      <form id="inquiryForm">
-        <div class="form_group"><label>제목 *</label><input type="text" id="inquiryTitle" class="form_input" required></div>
-        <div class="form_group"><label>내용 *</label><textarea id="inquiryContent" class="form_textarea" rows="8" required></textarea></div>
-        <div class="form_check_row">
-          <input type="checkbox" id="inquirySecret">
-          <label for="inquirySecret">비밀글로 작성 (작성자와 관리자만 열람 가능)</label>
+      <form id="reviewForm">
+        <div class="form_group" id="productPickWrap">
+          <label>리뷰 작성 상품 *</label>
+          <select id="reviewProductSelect" class="form_select" required>
+            <option value="">상품을 선택해주세요</option>
+          </select>
+          <p class="form_hint" id="productPickEmpty" style="display:none;">리뷰를 작성할 수 있는 배송완료 상품이 없습니다.</p>
         </div>
+
+        <div class="review_product_card" id="reviewProductCard" style="display:none;">
+          <img id="reviewProductThumb" src="" alt="">
+          <div>
+            <p class="prod_name" id="reviewProductName"></p>
+            <p class="prod_option" id="reviewProductOption"></p>
+          </div>
+        </div>
+
+        <div class="form_group">
+          <label>평점 *</label>
+          <div class="star_rating_input" id="starRatingInput">
+            <button type="button" class="star_btn" data-value="1">★</button>
+            <button type="button" class="star_btn" data-value="2">★</button>
+            <button type="button" class="star_btn" data-value="3">★</button>
+            <button type="button" class="star_btn" data-value="4">★</button>
+            <button type="button" class="star_btn" data-value="5">★</button>
+          </div>
+        </div>
+
+        <div class="form_group"><label>제목</label><input type="text" id="reviewTitle" class="form_input" placeholder="제목을 입력해주세요 (선택)"></div>
+        <div class="form_group"><label>내용 *</label><textarea id="reviewContent" class="form_textarea" rows="8" required placeholder="상품에 대한 솔직한 리뷰를 남겨주세요."></textarea></div>
+
         <div class="form_btn_row">
-          <button type="button" class="btn btn_outline_dark btn_delete" id="inquiryDeleteBtn" style="display:none;">삭제</button>
-          <button type="submit" class="btn btn_primary btn_submit" id="inquirySubmitBtn">문의 등록</button>
+          <button type="button" class="btn btn_outline_dark btn_delete" id="reviewDeleteBtn" style="display:none;">삭제</button>
+          <button type="submit" class="btn btn_primary btn_submit" id="reviewSubmitBtn">리뷰 등록</button>
         </div>
       </form>
     </div>

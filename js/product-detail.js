@@ -116,13 +116,14 @@ function renderSelectedOptions(p) {
   const wrap = document.getElementById('selectedOptions');
   wrap.innerHTML = cartLines.map((line, idx) => `
     <div class="selected_option_row" data-idx="${idx}">
-      <span>${line.option}</span>
+      <span class="opt_name">${line.option}</span>
       <div class="qty_control">
         <button type="button" class="qty_minus">-</button>
         <span>${line.qty}</span>
         <button type="button" class="qty_plus">+</button>
-        <button type="button" class="qty_remove">✕</button>
       </div>
+      <span class="line_price">${(line.qty * Number(p.price)).toLocaleString()}원</span>
+      <button type="button" class="qty_remove" aria-label="옵션 삭제">✕</button>
     </div>
   `).join('');
 
@@ -148,6 +149,7 @@ function renderSelectedOptions(p) {
 function updateTotalAmount(p) {
   const totalQty = cartLines.reduce((sum, l) => sum + l.qty, 0);
   document.getElementById('totalAmount').textContent = `${(totalQty * Number(p.price)).toLocaleString()}원`;
+  document.getElementById('totalQtyCount').textContent = totalQty ? `(${totalQty}개)` : '';
 }
 
 function initActions(p) {
@@ -156,7 +158,7 @@ function initActions(p) {
   window.CozamaWishlist.getLikedIds([p.id]).then((likedIds) => {
     if (likedIds.has(p.id)) {
       wishBtn.classList.add('active');
-      wishBtn.textContent = '♥ 좋아요';
+      wishBtn.textContent = '♥';
     }
   });
 
@@ -165,7 +167,7 @@ function initActions(p) {
     const result = await window.CozamaWishlist.toggle(p.id, isActive);
     if (result === null) return;
     wishBtn.classList.toggle('active', result);
-    wishBtn.textContent = result ? '♥ 좋아요' : '♡ 좋아요';
+    wishBtn.textContent = result ? '♥' : '♡';
   });
 
   document.getElementById('detailShareBtn').addEventListener('click', () => {

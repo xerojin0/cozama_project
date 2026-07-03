@@ -26,6 +26,7 @@
   z-index: 3; width: 44px; height: 44px;
   display: flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,.15);
+  cursor: pointer;
 }
 .main_visual .swiper_nav img { width: 16px; }
 .main_visual .swiper_prev { left: 24px; }

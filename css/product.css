@@ -80,12 +80,22 @@
 
 .detail_info { flex: 1; padding-top: 12px; }
 .detail_info .info_label { margin-bottom: 12px; }
-.detail_info .prod_title { font-size: 26px; margin-bottom: 16px; }
 .detail_info .prod_price { font-size: 22px; font-weight: 600; color: var(--color-text); margin-bottom: 24px; }
 .detail_info .detail_desc { margin-bottom: 32px; }
-.detail_util_row { display: flex; gap: 16px; margin-bottom: 24px; }
-.detail_util_row button { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-sub); }
-.detail_util_row .wish_btn.active { color: var(--color-primary); }
+
+.detail_title_row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.detail_title_row .prod_title { font-size: 26px; margin-bottom: 0; }
+.detail_util_row { display: flex; gap: 8px; flex: none; }
+.icon_util_btn {
+  width: 36px; height: 36px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--color-border); border-radius: 50%;
+  font-size: 18px; line-height: 1; color: var(--color-sub);
+  transition: border-color .2s ease, color .2s ease;
+}
+.icon_util_btn:hover { border-color: var(--color-text); color: var(--color-text); }
+.icon_util_btn img { width: 16px; height: 16px; }
+.icon_util_btn.wish_btn.active { color: var(--color-primary); border-color: var(--color-primary); }
 
 .detail_shipping_badge {
   display: inline-flex; align-items: center;
@@ -94,21 +104,38 @@
   font-size: 13px; color: var(--color-body);
 }
 
-.detail_option { margin-bottom: 32px; }
-.detail_option label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-.selected_options { margin-top: 12px; }
-.selected_option_row {
-  display: flex; align-items: center; justify-content: space-between;
-  background: var(--color-bg); padding: 14px 16px; margin-bottom: 8px; font-size: 13px;
+.detail_option { margin-bottom: 8px; }
+.option_select {
+  width: 100%; padding: 16px; border: 1px solid var(--color-text);
+  font-size: 14px; color: var(--color-text); background: var(--color-white);
 }
-.selected_option_row .qty_control { display: flex; align-items: center; gap: 10px; }
-.selected_option_row .qty_control button { width: 22px; height: 22px; border: 1px solid var(--color-border); }
+.option_select:focus { outline: none; }
+.selected_options { margin-top: 4px; }
+.selected_option_row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 4px; font-size: 14px;
+}
+.selected_option_row .opt_name { flex: 1; color: var(--color-text); }
+.selected_option_row .qty_control { display: flex; align-items: center; border: 1px solid var(--color-border); flex: none; }
+.selected_option_row .qty_control button { width: 30px; height: 30px; font-size: 14px; }
+.selected_option_row .qty_control span { display: inline-block; width: 34px; text-align: center; font-size: 13px; }
+.selected_option_row .line_price { flex: none; width: 100px; text-align: right; font-weight: 600; }
+.selected_option_row .qty_remove { flex: none; font-size: 16px; color: var(--color-sub); }
+.selected_option_row .qty_remove:hover { color: var(--color-text); }
 
-.detail_price_total { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px solid var(--color-border); margin-bottom: 20px; }
-.detail_price_total .label { font-size: 14px; color: var(--color-body); }
-.detail_price_total .amount { font-size: 20px; font-weight: 600; }
-.detail_action_row { display: flex; gap: 12px; }
-.detail_action_row .btn { flex: 1; }
+.detail_price_total { display: flex; justify-content: space-between; align-items: baseline; padding: 20px 4px; border-top: 2px solid var(--color-text); margin-bottom: 20px; }
+.detail_price_total .label { font-size: 13px; font-weight: 700; letter-spacing: .05em; color: var(--color-text); }
+.detail_price_total .amount { font-size: 24px; font-weight: 700; color: var(--color-text); }
+.detail_price_total .qty_count { font-size: 13px; font-weight: 400; color: var(--color-sub); margin-left: 6px; }
+
+.detail_action_row { display: flex; gap: 10px; }
+.detail_action_row .icon_action_btn {
+  width: 56px; height: 56px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--color-text);
+}
+.detail_action_row .icon_action_btn img { width: 22px; height: 22px; }
+.detail_action_row .btn_buy_now { flex: 1; height: 56px; font-size: 16px; }
 
 /* ---- 2구역: 함께구매 + 상세정보 ---- */
 .detail_tabs {

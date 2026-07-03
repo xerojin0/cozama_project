@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGnbAccordion();
   initAuthState();
   initSearchOverlay();
+  initQuickMenu();
   window.CozamaCart.refreshBadge();
 });
 
@@ -175,6 +176,33 @@ async function runSearch(keyword, resultWrap) {
       </div>
     </a>
   `).join('') + `<a href="product-list.html?cate=all&search=${encodeURIComponent(keyword)}" class="search_view_all">'${keyword}' 검색결과 ${count || products.length}건 전체보기</a>`;
+}
+
+/* ---- 퀵메뉴 (위로/아래로 스무스 스크롤 + CS 안내) ---- */
+function initQuickMenu() {
+  const topBtn = document.querySelector('.quick_top');
+  const bottomBtn = document.querySelector('.quick_bottom');
+  const csBtn = document.querySelector('.quick_cs');
+  if (!topBtn || !bottomBtn) return;
+
+  const updateVisibility = () => {
+    const scrollY = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    topBtn.classList.toggle('show', scrollY > 0);
+    bottomBtn.classList.toggle('hide', scrollY >= maxScroll - 1);
+  };
+
+  topBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  bottomBtn.addEventListener('click', () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  });
+  csBtn && csBtn.addEventListener('click', () => alert('상담시스템 준비중입니다.'));
+
+  window.addEventListener('scroll', updateVisibility);
+  window.addEventListener('resize', updateVisibility);
+  updateVisibility();
 }
 
 /* ---- 좋아요(wishlist) 토글 공통 로직 ---- */

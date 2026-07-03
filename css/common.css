@@ -351,3 +351,41 @@ body { padding-top: var(--header-h); }
  Common section spacing helper
 =================================================================== */
 .section_pad { padding: 100px 0; }
+
+/* ===================================================================
+ Quick Menu (우측 하단 고정)
+=================================================================== */
+.quick_menu {
+ position: fixed;
+ right: 30px;
+ bottom: 40px;
+ z-index: 500;
+ display: flex;
+ flex-direction: column;
+ gap: 12px;
+ }
+.quick_btn {
+ width: 52px;
+ height: 52px;
+ border-radius: 50%;
+ background: var(--color-white);
+ border: 1px solid var(--color-border);
+ box-shadow: 0 4px 16px rgba(31, 45, 61, .15);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+ }
+.quick_btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(31, 45, 61, .2); }
+.quick_btn img { width: 26px; height: 26px; }
+
+.quick_btn.quick_cs { background: var(--color-primary); border-color: var(--color-primary); }
+.quick_btn.quick_cs img { filter: brightness(0) invert(1); }
+
+.quick_arrow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; }
+.quick_arrow_up { border-bottom: 8px solid var(--color-text); }
+.quick_arrow_down { border-top: 8px solid var(--color-text); }
+
+.quick_btn.quick_top { display: none; }
+.quick_btn.quick_top.show { display: flex; }
+.quick_btn.quick_bottom.hide { display: none; }
