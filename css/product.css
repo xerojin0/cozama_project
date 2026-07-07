@@ -106,8 +106,13 @@
 
 .detail_option { margin-bottom: 8px; }
 .option_select {
-  width: 100%; padding: 16px; border: 1px solid var(--color-text);
+  width: 100%; padding: 16px 40px 16px 16px; border: 1px solid var(--color-text);
   font-size: 14px; color: var(--color-text); background: var(--color-white);
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%231F2D3D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
 }
 .option_select:focus { outline: none; }
 .selected_options { margin-top: 4px; }
